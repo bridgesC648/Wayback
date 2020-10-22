@@ -15,6 +15,7 @@ const METERS = 111139; // Number of meters corresponding to one degree long/lat
 const PI = Math.PI;
 const SEC_PER_DEG = 1/360;
 
+// Making a minor change
 
 //------------------------------------------------------------------
 // FUNCTIONS
