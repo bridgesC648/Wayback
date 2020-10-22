@@ -1,0 +1,42 @@
+.defaultText {
+  font-size: 32;
+  font-family: System-Regular;
+  font-weight: regular;
+  text-length: 32;
+}
+
+.application-fill           { fill: fb-cyan; }
+.foreground-fill            { fill: fb-white; }
+.background-fill            { fill: fb-black; }
+
+#background {
+  width: 100%;
+  height: 100%;
+  fill: black;
+}
+
+#phiRect{
+  fill: fb-cyan;
+}
+
+.plus-button1 #image {
+  href: "stat_dist_solid_48px.png";
+}
+.plus-button2 #image {
+  href: "icon48.png";
+}
+
+#btnSave {
+  x: 20;
+  y: 250;  
+}
+
+#btnReturn {
+  x: 240;
+  y: 250;
+}
+
+#btnReturn #text {
+  text-buffer: "Return";
+}
+
