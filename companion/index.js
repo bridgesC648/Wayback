@@ -1,5 +1,4 @@
 import * as messaging from "messaging";
-import { points } from "../common/waypoints.js";
 import { settingsStorage } from "settings";
 
 

@@ -29,7 +29,6 @@
   <text id="lblDistance" x="50%" y="75%+25"
     text-anchor="middle" fill="white"
     text-length="224" font-size="15">
-    
   </text>
 
   </svg>
