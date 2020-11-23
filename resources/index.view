@@ -1,40 +1,5 @@
 <svg>
-  <!-- Define symbol for rotation objects. -->
-  <defs>
-    <symbol id="northGroup">
-      <g id="north" pointer-events="visible" transform="translate(50%,50%)">
-        <animateTransform id="animNorth" attributeType="rotate" from="0" to="0" begin="enable" dur="1" />
-        <rect x="$-4" y="-210" width="2" height="210" fill="#e0e0e0" />       
-      </g>
-    </symbol>
-    
-    <symbol id="phiGroup">
-      <g id="phi" pointer-events="visible" transform="translate(50%, 50%)">
-        <animateTransform id="animPhi" attributeType="rotate" from="0" to="0" begin="enable" dur="1" />
-        <rect id="phiRect" x="$-4" y="-110" width="8" height="110" />
-      </g>
-    </symbol>
-    
-    <symbol id="textGroup">
-      <g id="text" pointer-events="visible" transform="translate(50%, 50%)">
-        <animate id="animText" attributeName="opacity" from="0" to="0" begin="enable" dur="2" />
-          <!-- Text -->
-          <text id="lblName" x="50%" y="75%"
-                text-anchor="middle" fill="fb-lime"
-                text-length="224" font-size="30"
-                font-weight="bold">
-            wpt
-          </text>
-          <text id="lblDistance" x="50%" y="75%+25"
-                text-anchor="middle" fill="white"
-                text-length="224" font-size="15">
-            distance
-          </text>
-      </g>
-    </symbol>
-  </defs>
-  
-  <!--<rect id="background" /> -->
+  <svg id="NavigationScreen">
   <gradientRect id="gradbg" x="0" y="65%" width="100%" height="100%" 
     gradient-type="radial"
     gradient-x1="50%" gradient-y1="50%"
@@ -43,28 +8,69 @@
     gradient-color2="black"
     gradient-opacity1=".3"
     gradient-opacity2="1"/>
+  
+  <!-- signal-acquiring ring. -->
+  <use id="signalRing" href="#signal" width="100%" height="100%" />
+  
   <!-- Use element for our phi indicator -->
   <use id="phiInstance" href="#phiGroup" width="100%" height="100%" />
-  
-  <!-- Use element for North indicator. -->
-  <use id="northInstance" href="#northGroup" width="100%" height="100%" />
 
   <!-- Buttons -->
   <use id="btnSave" href="#icon-button" class="medium-button application-fill plus-button1" />
   <use id="btnReturn" href="#icon-button" class="medium-button application-fill plus-button2" />
-  
-  <!-- Use element for Text
-  <use id="textInstance" href="#textGroup" width="100%" height="100%" /> -->
-            <!-- Text -->
+    
+  <!-- Text -->
   <text id="lblName" x="50%" y="70%"
     text-anchor="middle" fill="fb-cyan"
     text-length="224" font-size="30"
     font-weight="bold">
-            wpt
+            
   </text>
   <text id="lblDistance" x="50%" y="75%+25"
     text-anchor="middle" fill="white"
     text-length="224" font-size="15">
-            distance
+    
   </text>
+
+  </svg>
+  
+  <!-- Tile List Stuff -->
+  <svg id="WaypointsListScreen">
+    
+    <use id="myList" href="#tile-list">
+      <var id="virtual" value="1" />
+      <var id="reorder-enabled" value="0"/>
+      <var id="peek-enabled" value="0"/>
+      <var id="separator-height-bottom" value="2" />
+
+      <use id="my-pool" href="#tile-list-pool">
+        <use id="my-pool[0]" href="#my-item" />
+        <use id="my-pool[1]" href="#my-item" />
+        <use id="my-pool[2]" href="#my-item" />
+        <use id="my-pool[3]" href="#my-item" />
+        <use id="my-pool[4]" href="#my-item" />
+        <use id="my-pool[5]" href="#my-item" />
+        <use id="my-pool[6]" href="#my-item" />
+        <use id="my-pool[7]" href="#my-item" />
+        <use id="my-pool[8]" href="#my-item" />
+        <use id="my-pool[9]" href="#my-item" />
+        <use id="my-pool[10]" href="#my-item" />
+        <use id="my-pool[11]" href="#my-item" />
+      </use>
+    </use>
+  </svg>
+  
+  <!-- Waypoint Deletion Screen -->
+  <svg id="DeleteWaypointsScreen">
+    <text id="DeletionPrompt1" x="50%" y="50%"
+      text-anchor="middle" fill="fb-white"
+      text-length="224" font-size="30"
+      font-weight="bold">Are you sure you want to</text>
+    <text id="DeletionPrompt2" x="50%" y="50%+25"
+      text-anchor="middle" fill="fb-white"
+      text-length="224" font-size="30"
+      font-weight="bold">delete this waypoint?</text>
+    <use id="btnConfirmDeletion" href="#text-button" class="text-button left secondary application-fill" />
+    <use id="btnCancelDeletion" href="#text-button" class="text-button right secondary application-fill" />
+  </svg>
 </svg>

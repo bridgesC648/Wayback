@@ -2,21 +2,20 @@ function mySettings(props) {
   return (
     <Page>
       <Section
-        description={<Text>Manually set your heading from 0 to 360.</Text>}>
+        title={<Text bold align="center">Modify Waypoints</Text>}>
         <TextInput
-            label="Heading"
-            settingsKey="heading"
+        label="Waypoint 1"
+        placeholder = "Enter new name..."
+        settingsKey="newName"
+        />
+        <Button
+          list
+          label="Clear Settings Storage"
+          onClick={() => props.settingsStorage.clear()}
         />
       </Section>
       
-      <Section
-        description={<Text>Enable or disable idly monitoring position when not navigating.</Text>}
-        title="">        
-        <Toggle
-          label="Idle"
-          settingsKey="idle"
-        />
-      </Section>
+      
       
       <Section
         description={<Text>Enable or disable haptic feedback upon arrival.</Text>}
@@ -26,7 +25,6 @@ function mySettings(props) {
           settingsKey="haptics"
         />
       </Section>
-
     </Page>
   );
 }

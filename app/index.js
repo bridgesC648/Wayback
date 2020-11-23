@@ -1,38 +1,40 @@
 /*
-Sprint #3 - Navigation Feature
-Christopher Bridges
+Sprint #5 - Navigation Feature with Tile List and Deletable Waypoints
+Christopher Bridges and Keaton Archibald
+
+Sprint #6 - Navigation Feature + Tile List w/ deletable Waypoints + persistence
+  PATCH NOTES
+  11/16:  Changed Locations class to State class. Renamed all instances
+          appropriately. CB
+          Deleted unnecessary code comments CB
+          Added some questionably necessary code comments. CB 
+  11/17:  State of application now saved to device memory upon any change CB
+            - Waypoint saved CB
+            - Waypoint deleted CB
+            - Current waypoint changed CB
+          Upon load, state of application is restored if state information available
+  11/20:  Starting to write unit tests for each method, at least.
+          
 */
 import document from "document";
 import * as messaging from "messaging";
 import geolocation from "geolocation";
 import Navigator from "./Navigator";
-import Locations from "./Locations";
-import Waypoint from "./Waypoint";
-import PointerSymbol from "./PointerSymbol";
+import State from "./State";
 import MainView from "./MainView";
-
-const METERS = 111139; // Number of meters corresponding to one degree long/lat
-const PI = Math.PI;
-const SEC_PER_DEG = 1/360;
-
-// Making a minor change
+import * as fs from "fs";
 
 //------------------------------------------------------------------
 // FUNCTIONS
 //------------------------------------------------------------------
+// HOLY JANK BATMAN
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve,ms));
 }
-async function rotate() {
-  let i = 0;
-  while (true) {
-    arrow.groupTransform.rotate.angle = i;
-    i+=(360/60)%360;
-    await sleep(1000);    
-  }
-}
 
+// THIS SHIT NEEDS TO BE REPLACED WITH PROPER ANIMATION
 async function fadeInAndOut(svg, text) {
+  // Method that hackily fades the label in and then out
   svg.text = text;
   svg.style.opacity = 0;
   while ( svg.style.opacity < 1) {
@@ -45,151 +47,127 @@ async function fadeInAndOut(svg, text) {
     await sleep(100);
   }
 }
-// Depracated by PointerSymbol class
-function animSymbol(animTransform, use, from, to, dur) {
-  // sets the attributes of a rotation and then activates it.
-  animTransform.from = from;
-  animTransform.to = to;
-  animTransform.dur = dur;
-  console.log(`Rotating from ${from} to ${to}.`);
-  use.animate("enable");
-}
 
 //-------------------------------------------------------------------
-// UI ELEMENTS
+// GLOBAL VARIABLES - IS IT BAD TO HAVE SO MANY?
 //-------------------------------------------------------------------
-/*
-let background = document.getElementById("background");
-let arrow = document.getElementById("arrow");
-let north = document.getElementById("north");
-let btnSave = document.getElementById("btnSave");
-let btnReturn = document.getElementById("btnReturn");
-
-let northGroup = document.getElementById("northInstance"); // <use> id.
-let animNorth = document.getElementById("animNorth"); // animateTransform id
-
-let phiGroup = document.getElementById("phiInstance"); // phi use id
-let animPhi = document.getElementById("animPhi"); // animateTransform ID
-
-let lblName = document.getElementById("lblName"); // waypoint name label
-let lblDistance = document.getElementById("lblDistance"); // distance label
-
-let north = new PointerSymbol(
-  document.getElementById("northInstance"),
-  document.getElementById("animNorth")
-);
-
-let phi = new PointerSymbol(
-  document.getElementById("phiInstance"),
-  document.getElementById("animPhi")
-); */
-
-//-------------------------------------------------------------------
-// GLOBAL VARIABLES
-//-------------------------------------------------------------------
-let locs = new Locations();
+// State object, holds Waypoints and manipulates them
+var state = new State();
+// Navigator object, handles navigational features
 let nav = new Navigator();
+// Contains all of the UI elements. 
 let mainView = new MainView();
-let idleSetting;
-let hapticSetting;
+// Manages each screen
+let NavigationScreen = document.getElementById("NavigationScreen");
+let WaypointsListScreen = document.getElementById("WaypointsListScreen");
+let DeleteWaypointsScreen = document.getElementById("DeleteWaypointsScreen");
+// Contains the tiles of the tile list
+var tileList = [11];
+var deletionButtons = [10];
+var deletionIndex = 0;
 
 //-------------------------------------------------------------------
 // BUTTON EVENTS
 //-------------------------------------------------------------------
 
+// Gets called when the Save button gets pressed
 mainView.btnSave.onactivate = function(evt) {
+  try {
+    mainView.beacon.acquire();
+  } catch (err) {
+    console.log(err);
+  }
   geolocation.getCurrentPosition(
     savePosition,
     locationError,
     {enableHighAccuracy: true, timeout: 60 * 1000});
 }
 
+// Gets called when the Return button gets pressed.
 mainView.btnReturn.onactivate = function(evt) {
-  // Update nav dest to currently selected
-  if (locs.getCurrent() != undefined && locs.getCurrent.active != false){
-    // Update lblName
-    mainView.lblName.text = locs.getCurrent().getName();
-    nav.setDestination(locs.getCurrent());
-    nav.start(watchSuccess, locationError);
-  }
+  ShowWaypointsListScreen();
 }
+
+mainView.btnConfirmDeletion.onactivate = function(evt) {
+  state.delete(deletionIndex);
+  //deleteWaypoint(deletionIndex);
+  ShowWaypointsListScreen();
+}
+
+mainView.btnCancelDeletion.onactivate = function(evt){
+  ShowWaypointsListScreen();
+}
+
 //-------------------------------------------------------------------
 // CALLBACK FUNCTIONS
 //-------------------------------------------------------------------
 function savePosition(position) {
+  mainView.beacon.disable();
   // Log coordinates to console
-  if (!locs.maxReached()) {
-    locs.add(position);
+  if (!state.maxReached()) {
+    let waypointIndex = state.add(position);
   } else {
+    // at some point we should replace this with some on-screen indication
+    // that max waypoints have been reached.
     console.log("Could not add waypoint: Maximum waypoints reached.");
   }
 }
 
+function refreshList(){
+  for (var i = 1; i <= 11; i++){
+    if (state.getAtIndex(i-1) != undefined && tileList[i] != undefined){
+      tileList[i].getElementById("text").text = state.getAtIndex(i-1).getName();
+      tileList[i].getElementById("btnDelete").style.display = "inline";
+    } else if (tileList[i] != undefined){
+      tileList[i].getElementById("text").text = "";
+      tileList[i].getElementById("btnDelete").style.display = "none";
+    }
+  }
+}
+
 function watchSuccess(position) {
-  // Gets called when position changes. Or, it should.
+  // Gets called when position changes.
   console.log("------------------------------------------------");
   console.log("POSITION CHANGED: CALLING watchSuccess()");
   console.log("------------------------------------------------");
-  let from; // Current rotation angle of phi 
-  let northFrom; // Current rotation angle of north
-  if (nav.getAngle() != null) {
-    northFrom = 360 - nav.getHeading();
-    from = 360 - nav.getHeading() + nav.getAngle();
-  } else {
-    northFrom = 0;
-    from = 0;
-  }
+  console.log("Updating navigator.");
   nav.update(position);
   // Update the "arrows"
-  north.rotate(360 - nav.getHeading());
-  phi.rotate(360 - nav.getHeading() + nav.getAngle());
-  /*)
-  let northTo = 360 - nav.getHeading();
-  let to = 360 - nav.getHeading() + nav.getAngle();
-  let northDur = Math.abs(northTo - northFrom)/360;
-  let dur = Math.abs(to-from)/360;
-  animSymbol(animPhi, phiGroup, from, to, dur);
-  animSymbol(animNorth, northGroup, northFrom, northTo, northDur); */
+  mainView.phi.rotate(360 - nav.getHeading() + nav.getAngle());
   if (nav.arrived()) {
+    // announce arrival to log
     console.log("You have arrived!");
+    // Stop navigator
     nav.stop();
+    // hide distance label
     mainView.lblDistance.style.display="none";
+    // change name label text, fade in and out.
     fadeInAndOut(mainView.lblName, "You have arrived!");
-    locs.getCurrent().disable(); 
   } else {
-    lblDistance.text = nav.getDistance().toFixed(4);
-    if (lblDistance.style.display == "none")
-      lblDistance.style.display = "";
-    /*
-    let to = 360 - nav.getHeading() + nav.getAngle();
-    let dur = Math.abs(to-from)/360;
-    animSymbol(animPhi, phiGroup, from, to, dur); */
+    // Update distance label
+    mainView.lblDistance.text = nav.getDistance().toFixed(4);
+    // Show the label if it is hidden.
+    if (mainView.lblDistance.style.display == "none")
+      mainView.lblDistance.style.display = "";
   }
 }
 
 function locationError(error) {
   console.log("Error: " + error.code, "Message: " + error.message);
 }
+
 // Settings socket whatever------------------------------------------
 // Message is received
 messaging.peerSocket.onmessage = evt => {
   console.log(`1 App received: ${JSON.stringify(evt)}`);
-  if (evt.data.key === "heading") {
-    let from = (nav.getHeading()!=undefined) ? 360-nav.getHeading() : 0;
-    nav.setHeading(parseFloat(JSON.parse(evt.data.newValue).name));
-    console.log(`User heading set to: ${nav.getHeading()}`);
-    let to = 360 - nav.getHeading();
-    let dur = Math.abs(to-from)/360;
-    animSymbol(animNorth, northGroup, from, to, dur);
-  } else if (evt.data.key === "idle") {
-    //let val = JSON.stringify(evt.data.newValue);
+  /*if (evt.data.key === "idle") {
     let val = evt.data.newValue;
     idleSetting = (val === "true" ? true : false);
     console.log("idleSetting: " + idleSetting);
   } else if (evt.data.key === "haptics") {
     hapticSetting = (evt.data.newValue === "true" ? true : false);
     console.log(`Haptic feedback enabled = ${hapticSetting}`);
-  }
+  } */
 };
 
 // Message socket opens
@@ -202,3 +180,104 @@ messaging.peerSocket.onclose = () => {
   console.log("App Socket Closed");
 };
 
+//Change View and Tile List Stuff - Keaton
+ShowNavigationScreen();
+let myList = document.getElementById("myList");
+let NUM_ELEMS = 11;
+var tiles = [11];
+
+myList.delegate = {
+  getTileInfo: (index) => {
+    return {
+      type: "my-pool",
+      value: "Item",
+      index: index
+    };
+  },
+  configureTile: (tile, info) => {
+    console.log(`Item: ${info.index}`)
+    if (info.type == "my-pool") {
+      
+      //Assigns tile to array to be accessed outside of delegate
+      tileList[info.index] = tile;
+      deletionButtons[info.index-1] = tile.getElementById("btnDelete");
+      
+      let touch = tile.getElementById("touch");
+      touch.addEventListener("click", evt => {
+        console.log(`touched: ${info.index}`);
+        if (info.index == 0) {
+          ShowNavigationScreen();
+        }else {
+          state.selectWaypoint(info.index);
+          // Update nav dest to currently selected Waypoint
+          if (state.getCurrent() != undefined && state.getCurrent.active != false){
+          // Update lblName
+          mainView.lblName.text = state.getCurrent().getName();
+          // Set nav destination to the current waypoint
+          nav.setDestination(state.getCurrent());
+          // Start navigation with watchSuccess callback 
+          nav.start(watchSuccess, locationError);
+        }
+          ShowNavigationScreen();
+        }
+      });
+      
+      let btnDelete = tile.getElementById("btnDelete");
+      btnDelete.onactivate = function(evt) {
+        console.log("delete button " + info.index);
+      }
+      
+      if (info.index == 0) {
+       tile.getElementById("text").text = "Return";
+        tile.getElementById("btnDelete").style.display = "none";
+       console.log("Changed tile name");
+      } else{
+        if (state.getAtIndex(info.index-1) != undefined){
+          tile.getElementById("text").text = state.getAtIndex(info.index-1).getName();
+          tile.getElementById("btnDelete").style.display = "inline";
+        } else {
+          tile.getElementById("text").text = "";
+          tile.getElementById("btnDelete").style.display = "none";
+        }
+      }
+      
+      tile.getElementById("btnDelete").onactivate = function(evt) {
+        console.log("delete button pressed for " + info.index);
+        deletionIndex = info.index;
+        ShowDeleteWaypointsScreen();
+      }
+    }
+  }
+};
+
+myList.length = NUM_ELEMS;
+function ShowNavigationScreen(){
+  console.log("Switched to show NaviagtionScreen");
+  NavigationScreen.style.display = "inline";
+  WaypointsListScreen.style.display = "none";
+  DeleteWaypointsScreen.style.display = "none";
+}
+
+function ShowWaypointsListScreen(){
+  console.log("Switched to show WaypointsListScreen");
+  NavigationScreen.style.display = "none";
+  WaypointsListScreen.style.display = "inline";
+  DeleteWaypointsScreen.style.display = "none";
+  
+  refreshList();
+}
+
+function ShowDeleteWaypointsScreen(){
+  console.log("Switched to show DeleteWaypointsScreen");
+  NavigationScreen.style.display = "none";
+  WaypointsListScreen.style.display = "none";
+  DeleteWaypointsScreen.style.display = "inline";
+}
+
+// Some file stuff
+/*
+const listDir = fs.listDirSync("/private/data");
+let dirIter;
+while ((dirIter = listDir.next()) && !dirIter.done) { 
+  fs.unlinkSync(dirIter.value);
+} */

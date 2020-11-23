@@ -9,6 +9,14 @@
 .foreground-fill            { fill: fb-white; }
 .background-fill            { fill: fb-black; }
 
+#imgSignal {
+  opacity: 1;
+}
+
+#signalRing {
+  opacity: 0;
+}
+
 #background {
   width: 100%;
   height: 100%;
@@ -20,10 +28,13 @@
 }
 
 .plus-button1 #image {
-  href: "stat_dist_solid_48px.png";
+  href: "images/stat_dist_solid_48px.png";
 }
 .plus-button2 #image {
-  href: "icon48.png";
+  href: "images/icon48.png";
+}
+.plus-button3 #image {
+  href: "images/trashIcon.png"
 }
 
 #btnSave {
@@ -36,7 +47,58 @@
   y: 250;
 }
 
+#btnDelete {
+  x: 240;
+  y: 15%;
+}
+
 #btnReturn #text {
   text-buffer: "Return";
 }
 
+#btnConfirmDeletion #text {
+  text-buffer: "Yes";
+}
+
+#btnCancelDeletion #text {
+  text-buffer: "No";
+}
+
+#toggleDisplayButton{
+  fill: green;
+}
+
+.list-item {
+  height: 112;
+}
+
+.list-item text {
+  fill: "white";
+  text-anchor: middle;
+  x: 50%;
+  font-size: 24;
+  text-length: 20;
+}
+
+.line {
+  width: 100%;
+  height: 6;
+  fill: #222222;
+  y: 100%-6;
+}
+
+.bg {
+  fill: #111111;
+  width: 100%;
+  height: 100%;
+  x: 0;
+  y: 0;
+}
+
+#touch {
+  width: 100%;
+  height: 100%-6;
+  x: 0;
+  y: 0;
+  opacity: 0;
+}

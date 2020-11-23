@@ -1,5 +1,10 @@
 import * as messaging from "messaging";
+import * as fs from "fs";
 import { settingsStorage } from "settings";
+
+//import State from "../app/State";
+
+//let compState = new State();
 
 // Message socket opens
 messaging.peerSocket.onopen = () => {
