@@ -1,8 +1,6 @@
 import PointerSymbol from "./PointerSymbol";
-import Signal from "./Signal";
-import geolocation from "geolocation";
 import document from "document";
-export default class MainView {
+export default class View {
   // All of the main view's UI elements and functions that manipulate them
   constructor() {
     //PointerSymbol for the phi indicator (phi = direction toward waypoint)
@@ -38,6 +36,31 @@ export default class MainView {
     
     // Labels (text elements)
     this.lblName = document.getElementById("lblName");
-    this.lblDistance = document.getElementById("lblDistance");    
+    this.lblDistance = document.getElementById("lblDistance");
+
+    // SVG Elements.
+    this.navigationView = document.getElementById("NavigationScreen");
+    this.tileView = document.getElementById("WaypointsListScreen");
+    this.deletePrompt = document.getElementById("DeleteWaypointsScreen");
   } // constructor
+
+  // Show methods
+  showNav() {
+    this.navigationView.style.display = "inline";
+    this.tileView.style.display = "none";
+    this.deletePrompt.style.display = "none";
+  }
+
+  showTiles() {
+    this.tileView.style.display = "inline";
+    this.navigationView.style.display = "none";
+    this.deletePrompt.style.display = "none";
+  }
+
+  showPrompt() {
+    this.deletePrompt.style.display = "inline";
+    this.tileView.style.display = "none";
+    this.navigationView.style.display = "none";
+  }
+  
 }

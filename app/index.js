@@ -13,17 +13,20 @@ Sprint #6 - Navigation Feature + Tile List w/ deletable Waypoints + persistence
             - Waypoint deleted CB
             - Current waypoint changed CB
           Upon load, state of application is restored if state information available
-  11/20:  Starting to write unit tests for each method, at least.
-  11/22:  Integrating Settings feature from Fitbit Studio -> GitHub       
+  11/22:  Integrating Settings feature from Fitbit Studio -> GitHub
+          Updated app to include current Settings functionality
+          Renamed MainView -> View, renamed mainView -> view
+          Refactoring
+            - Moved hide/show SVG elements to View class   
+            - Moved some methods to common/util.js
 */
 import document from "document";
 import * as messaging from "messaging";
 import geolocation from "geolocation";
 import Navigator from "./Navigator";
 import State from "./State";
-import MainView from "./MainView";
+import View from "./View";
 import * as fs from "fs";
-
 //------------------------------------------------------------------
 // FUNCTIONS
 //------------------------------------------------------------------
@@ -56,11 +59,7 @@ var state = new State();
 // Navigator object, handles navigational features
 let nav = new Navigator();
 // Contains all of the UI elements. 
-let mainView = new MainView();
-// Manages each screen
-let NavigationScreen = document.getElementById("NavigationScreen");
-let WaypointsListScreen = document.getElementById("WaypointsListScreen");
-let DeleteWaypointsScreen = document.getElementById("DeleteWaypointsScreen");
+let view = new View();
 // Contains the tiles of the tile list
 var tileList = [11];
 var deletionButtons = [10];
@@ -71,9 +70,9 @@ var deletionIndex = 0;
 //-------------------------------------------------------------------
 
 // Gets called when the Save button gets pressed
-mainView.btnSave.onactivate = function(evt) {
+view.btnSave.onactivate = function(evt) {
   try {
-    mainView.beacon.acquire();
+    view.beacon.acquire();
   } catch (err) {
     console.log(err);
   }
@@ -84,25 +83,31 @@ mainView.btnSave.onactivate = function(evt) {
 }
 
 // Gets called when the Return button gets pressed.
-mainView.btnReturn.onactivate = function(evt) {
-  ShowWaypointsListScreen();
+view.btnReturn.onactivate = function(evt) {
+  view.showTiles();
+  refreshList();
+  //ShowWaypointsListScreen();
 }
 
-mainView.btnConfirmDeletion.onactivate = function(evt) {
+view.btnConfirmDeletion.onactivate = function(evt) {
   state.delete(deletionIndex);
   //deleteWaypoint(deletionIndex);
-  ShowWaypointsListScreen();
+  //ShowWaypointsListScreen();
+  view.showTiles();
+  refreshList();
+  sendMessage();
 }
 
-mainView.btnCancelDeletion.onactivate = function(evt){
-  ShowWaypointsListScreen();
+view.btnCancelDeletion.onactivate = function(evt){
+  //ShowWaypointsListScreen();
+  view.showTiles();
 }
 
 //-------------------------------------------------------------------
 // CALLBACK FUNCTIONS
 //-------------------------------------------------------------------
 function savePosition(position) {
-  mainView.beacon.disable();
+  view.beacon.disable();
   // Log coordinates to console
   if (!state.maxReached()) {
     let waypointIndex = state.add(position);
@@ -134,22 +139,22 @@ function watchSuccess(position) {
   console.log("Updating navigator.");
   nav.update(position);
   // Update the "arrows"
-  mainView.phi.rotate(360 - nav.getHeading() + nav.getAngle());
+  view.phi.rotate(360 - nav.getHeading() + nav.getAngle());
   if (nav.arrived()) {
     // announce arrival to log
     console.log("You have arrived!");
     // Stop navigator
     nav.stop();
     // hide distance label
-    mainView.lblDistance.style.display="none";
+    view.lblDistance.style.display="none";
     // change name label text, fade in and out.
-    fadeInAndOut(mainView.lblName, "You have arrived!");
+    fadeInAndOut(view.lblName, "You have arrived!");
   } else {
     // Update distance label
-    mainView.lblDistance.text = nav.getDistance().toFixed(4);
+    view.lblDistance.text = nav.getDistance().toFixed(4);
     // Show the label if it is hidden.
-    if (mainView.lblDistance.style.display == "none")
-      mainView.lblDistance.style.display = "";
+    if (view.lblDistance.style.display == "none")
+      view.lblDistance.style.display = "";
   }
 }
 
@@ -157,7 +162,7 @@ function locationError(error) {
   console.log("Error: " + error.code, "Message: " + error.message);
 }
 
-// Settings socket whatever------------------------------------------
+// Settings socket ------------------------------------------
 // Message is received
 messaging.peerSocket.onmessage = evt => {
   console.log(`1 App received: ${JSON.stringify(evt)}`);
@@ -210,7 +215,7 @@ messaging.peerSocket.onclose = () => {
 };
 
 //Change View and Tile List Stuff - Keaton
-ShowNavigationScreen();
+view.showNav();
 let myList = document.getElementById("myList");
 let NUM_ELEMS = 11;
 var tiles = [11];
@@ -235,19 +240,19 @@ myList.delegate = {
       touch.addEventListener("click", evt => {
         console.log(`touched: ${info.index}`);
         if (info.index == 0) {
-          ShowNavigationScreen();
+          view.showNav();
         }else {
           state.selectWaypoint(info.index);
           // Update nav dest to currently selected Waypoint
           if (state.getCurrent() != undefined && state.getCurrent.active != false){
           // Update lblName
-          mainView.lblName.text = state.getCurrent().getName();
+          view.lblName.text = state.getCurrent().getName();
           // Set nav destination to the current waypoint
           nav.setDestination(state.getCurrent());
           // Start navigation with watchSuccess callback 
           nav.start(watchSuccess, locationError);
         }
-          ShowNavigationScreen();
+          view.showNav();
         }
       });
       
@@ -273,34 +278,13 @@ myList.delegate = {
       tile.getElementById("btnDelete").onactivate = function(evt) {
         console.log("delete button pressed for " + info.index);
         deletionIndex = info.index;
-        ShowDeleteWaypointsScreen();
+        view.showPrompt();
       }
     }
   }
 };
 
 myList.length = NUM_ELEMS;
-function ShowNavigationScreen(){
-  console.log("Switched to show NaviagtionScreen");
-  NavigationScreen.style.display = "inline";
-  WaypointsListScreen.style.display = "none";
-  DeleteWaypointsScreen.style.display = "none";
-}
-
-function ShowWaypointsListScreen(){
-  console.log("Switched to show WaypointsListScreen");
-  NavigationScreen.style.display = "none";
-  WaypointsListScreen.style.display = "inline";
-  DeleteWaypointsScreen.style.display = "none";
-  refreshList();
-}
-
-function ShowDeleteWaypointsScreen(){
-  console.log("Switched to show DeleteWaypointsScreen");
-  NavigationScreen.style.display = "none";
-  WaypointsListScreen.style.display = "none";
-  DeleteWaypointsScreen.style.display = "inline";
-}
 
 // Nicholas W. (Settings stuff)
 messaging.peerSocket.addEventListener("open", (evt) => {
@@ -340,11 +324,3 @@ if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
   messaging.peerSocket.send(data);
    }
 }
-
-// Some file stuff
-/*
-const listDir = fs.listDirSync("/private/data");
-let dirIter;
-while ((dirIter = listDir.next()) && !dirIter.done) { 
-  fs.unlinkSync(dirIter.value);
-} */
