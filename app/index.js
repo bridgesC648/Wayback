@@ -14,7 +14,7 @@ Sprint #6 - Navigation Feature + Tile List w/ deletable Waypoints + persistence
             - Current waypoint changed CB
           Upon load, state of application is restored if state information available
   11/20:  Starting to write unit tests for each method, at least.
-          
+  11/22:  Integrating Settings feature from Fitbit Studio -> GitHub       
 */
 import document from "document";
 import * as messaging from "messaging";
@@ -111,6 +111,7 @@ function savePosition(position) {
     // that max waypoints have been reached.
     console.log("Could not add waypoint: Maximum waypoints reached.");
   }
+  sendMessage();
 }
 
 function refreshList(){
@@ -160,6 +161,13 @@ function locationError(error) {
 // Message is received
 messaging.peerSocket.onmessage = evt => {
   console.log(`1 App received: ${JSON.stringify(evt)}`);
+  let names = ["newName1", "newName2", "newName3", "newName4", "newName5",
+               "newName6", "newName7", "newName8", "newName9", "newName10"];  // array of setttings keys
+  for (let i = 0; i < names.length; i++) {
+    if (typeof state.waypoints[i] != "undefined") {
+       rename(names[i], state.waypoints[i].getFilename(), evt);
+    }
+  }
   /*if (evt.data.key === "idle") {
     let val = evt.data.newValue;
     idleSetting = (val === "true" ? true : false);
@@ -169,6 +177,27 @@ messaging.peerSocket.onmessage = evt => {
     console.log(`Haptic feedback enabled = ${hapticSetting}`);
   } */
 };
+
+function rename(setKey, txt, evt) {
+  if (evt.data.key === setKey && evt.data.newValue && fs.existsSync(txt)) {
+    let newName = editString(JSON.stringify(evt.data.newValue));
+    let jsonData = fs.readFileSync(txt, "cbor");
+    jsonData.name = newName;
+    fs.writeFileSync(txt, jsonData, "cbor");
+    sendMessage();
+    let stateJSON = fs.readFileSync("state.txt", "cbor");
+    state.restoreState(stateJSON);
+    refreshList();
+  }
+}
+
+function editString(string) { 
+  var start = string.indexOf(':')
+  var res = string.substring(start + 3, string.length - 4);
+  var length = 20;                                           // max number of characters
+  var trim = res.substring(0, length);
+  return trim;
+}
 
 // Message socket opens
 messaging.peerSocket.onopen = () => {
@@ -263,7 +292,6 @@ function ShowWaypointsListScreen(){
   NavigationScreen.style.display = "none";
   WaypointsListScreen.style.display = "inline";
   DeleteWaypointsScreen.style.display = "none";
-  
   refreshList();
 }
 
@@ -272,6 +300,45 @@ function ShowDeleteWaypointsScreen(){
   NavigationScreen.style.display = "none";
   WaypointsListScreen.style.display = "none";
   DeleteWaypointsScreen.style.display = "inline";
+}
+
+// Nicholas W. (Settings stuff)
+messaging.peerSocket.addEventListener("open", (evt) => {
+  console.log("Ready to send or receive messages");
+  sendMessage();
+});
+
+messaging.peerSocket.addEventListener("error", (err) => {
+  console.error(`Connection error: ${err.code} - ${err.message}`);
+});
+
+function sendMessage() {
+  let blank = "waypoint not saved yet";
+  
+  let data = {
+    Waypoint1 : blank,
+    Waypoint2 : blank,
+    Waypoint3 : blank,
+    Waypoint4 : blank,
+    Waypoint5 : blank,
+    Waypoint6 : blank,
+    Waypoint7 : blank,
+    Waypoint8 : blank,
+    Waypoint9 : blank,
+    Waypoint10 : blank
+  }
+
+    let counter = 0;
+    for (let property in data) {
+      if (typeof state.waypoints[counter] != "undefined") {
+      data[property] = fs.readFileSync(state.waypoints[counter].getFilename(), "cbor").name;
+    }  
+      counter++;
+    } 
+
+if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+  messaging.peerSocket.send(data);
+   }
 }
 
 // Some file stuff
