@@ -18,7 +18,6 @@ Sprint #6 - Navigation Feature + Tile List w/ deletable Waypoints + persistence
           Renamed MainView -> View, renamed mainView -> view
           Refactoring
             - Moved hide/show SVG elements to View class   
-            - Moved some methods to common/util.js
 */
 import document from "document";
 import * as messaging from "messaging";
@@ -27,6 +26,7 @@ import Navigator from "./Navigator";
 import State from "./State";
 import View from "./View";
 import * as fs from "fs";
+
 //------------------------------------------------------------------
 // FUNCTIONS
 //------------------------------------------------------------------
@@ -68,7 +68,6 @@ var deletionIndex = 0;
 //-------------------------------------------------------------------
 // BUTTON EVENTS
 //-------------------------------------------------------------------
-
 // Gets called when the Save button gets pressed
 view.btnSave.onactivate = function(evt) {
   try {
@@ -86,21 +85,18 @@ view.btnSave.onactivate = function(evt) {
 view.btnReturn.onactivate = function(evt) {
   view.showTiles();
   refreshList();
-  //ShowWaypointsListScreen();
 }
 
 view.btnConfirmDeletion.onactivate = function(evt) {
   state.delete(deletionIndex);
-  //deleteWaypoint(deletionIndex);
-  //ShowWaypointsListScreen();
   view.showTiles();
   refreshList();
   sendMessage();
 }
 
 view.btnCancelDeletion.onactivate = function(evt){
-  //ShowWaypointsListScreen();
   view.showTiles();
+  refreshList();
 }
 
 //-------------------------------------------------------------------
@@ -218,8 +214,6 @@ messaging.peerSocket.onclose = () => {
 view.showNav();
 let myList = document.getElementById("myList");
 let NUM_ELEMS = 11;
-var tiles = [11];
-
 myList.delegate = {
   getTileInfo: (index) => {
     return {
