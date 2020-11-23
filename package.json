@@ -25,6 +25,7 @@
     "defaultLanguage": "en-US"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "fitbit-build"
   }
 }
