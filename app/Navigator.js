@@ -1,5 +1,6 @@
 import geolocation from "geolocation";
-import Waypoint from "./Waypoint";
+//import Waypoint from "./Waypoint";
+
 const PI = Math.PI;
 const METERS = 111139; // Number of meters corresponding to one degree long/lat
 export default class Navigator {
