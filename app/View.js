@@ -33,6 +33,8 @@ export default class View {
     this.btnReturn = document.getElementById("btnReturn");
     this.btnConfirmDeletion = document.getElementById("btnConfirmDeletion");
     this.btnCancelDeletion = document.getElementById("btnCancelDeletion");
+    this.btnConfirmCancelNavigation = document.getElementById("btnConfirmCancelNavigation");
+    this.btnCancelCancelNavigation = document.getElementById("btnCancelCancelNavigation");
     
     // Labels (text elements)
     this.lblName = document.getElementById("lblName");
@@ -42,6 +44,7 @@ export default class View {
     this.navigationView = document.getElementById("NavigationScreen");
     this.tileView = document.getElementById("WaypointsListScreen");
     this.deletePrompt = document.getElementById("DeleteWaypointsScreen");
+    this.cancelPrompt = document.getElementById("CancelNavigationScreen");
   } // constructor
 
   // Show methods
@@ -49,18 +52,28 @@ export default class View {
     this.navigationView.style.display = "inline";
     this.tileView.style.display = "none";
     this.deletePrompt.style.display = "none";
+    this.cancelPrompt.style.display = "none";
   }
 
   showTiles() {
     this.tileView.style.display = "inline";
     this.navigationView.style.display = "none";
     this.deletePrompt.style.display = "none";
+    this.cancelPrompt.style.display = "none";
   }
 
   showPrompt() {
     this.deletePrompt.style.display = "inline";
     this.tileView.style.display = "none";
     this.navigationView.style.display = "none";
+    this.cancelPrompt.style.display = "none";
+  }
+
+  showCancel() {
+    this.deletePrompt.style.display = "none";
+    this.tileView.style.display = "none";
+    this.navigationView.style.display = "none";
+    this.cancelPrompt.style.display = "inline";
   }
   
 }

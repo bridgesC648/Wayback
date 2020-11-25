@@ -62,7 +62,6 @@ let nav = new Navigator();
 let view = new View();
 // Contains the tiles of the tile list
 var tileList = [11];
-var deletionButtons = [10];
 var deletionIndex = 0;
 
 //-------------------------------------------------------------------
@@ -99,6 +98,18 @@ view.btnCancelDeletion.onactivate = function(evt){
   refreshList();
 }
 
+view.btnConfirmCancelNavigation.onactivate = function(evt) {
+  view.showNav();
+  nav.stop();
+  view.phi.rotate(0);
+  view.lblName.style.opacity = 0;
+  view.lblDistance.style.opacity = 0;
+}
+
+view.btnCancelCancelNavigation.onactivate = function(evt){
+  view.showTiles();
+}
+
 //-------------------------------------------------------------------
 // CALLBACK FUNCTIONS
 //-------------------------------------------------------------------
@@ -115,16 +126,37 @@ function savePosition(position) {
   sendMessage();
 }
 
-function refreshList(){
+function refreshList(){ // Code to refresh the tile list so it matches the waypoints : Keaton Archibald
   for (var i = 1; i <= 11; i++){
+    //Repopulates the list's labels and if buttons should be shown.
     if (state.getAtIndex(i-1) != undefined && tileList[i] != undefined){
       tileList[i].getElementById("text").text = state.getAtIndex(i-1).getName();
       tileList[i].getElementById("btnDelete").style.display = "inline";
     } else if (tileList[i] != undefined){
       tileList[i].getElementById("text").text = "";
       tileList[i].getElementById("btnDelete").style.display = "none";
-    }
+    } 
+    try {
+      tileList[i].getElementById("btnCancelNavigation").style.display = "none";
+    } catch { }
   }
+    
+    //Only shows the cancel navigation button if the app is navigating on the waypoint that is being naigatied too
+    if (!nav.isNav()) {
+      try {
+        if(state.getCurrent().getName() != ""){
+          tileList[state.getCurrentIndex() + 1].getElementById("btnDelete").style.display = "inline";
+          console.log("no error")
+        }
+      } catch(err) {
+        tileList[state.getCurrentIndex() + 1].getElementById("btnDelete").style.display = "none";
+        console.log(err);
+      }
+      tileList[state.getCurrentIndex() + 1].getElementById("btnCancelNavigation").style.display = "none"; 
+    } else {
+      tileList[state.getCurrentIndex() + 1].getElementById("btnDelete").style.display = "none";
+      tileList[state.getCurrentIndex() + 1].getElementById("btnCancelNavigation").style.display = "inline";
+    }
 }
 
 function watchSuccess(position) {
@@ -134,8 +166,6 @@ function watchSuccess(position) {
   console.log("------------------------------------------------");
   console.log("Updating navigator.");
   nav.update(position);
-  // Update the "arrows"
-  view.phi.rotate(360 - nav.getHeading() + nav.getAngle());
   if (nav.arrived()) {
     // announce arrival to log
     console.log("You have arrived!");
@@ -145,13 +175,18 @@ function watchSuccess(position) {
     view.lblDistance.style.display="none";
     // change name label text, fade in and out.
     fadeInAndOut(view.lblName, "You have arrived!");
+    view.phi.rotate(360);
   } else {
+    // Update the "arrows"
+    view.phi.rotate(360 - nav.getHeading() + nav.getAngle());
     // Update distance label
     view.lblDistance.text = nav.getDistance().toFixed(4);
     // Show the label if it is hidden.
     if (view.lblDistance.style.display == "none")
       view.lblDistance.style.display = "";
   }
+  view.lblName.style.opacity = 1;
+  view.lblDistance.style.opacity = 1;
 }
 
 function locationError(error) {
@@ -215,6 +250,7 @@ messaging.peerSocket.onclose = () => {
 view.showNav();
 let myList = document.getElementById("myList");
 let NUM_ELEMS = 11;
+var tiles = [11];
 myList.delegate = {
   getTileInfo: (index) => {
     return {
@@ -229,38 +265,54 @@ myList.delegate = {
       
       //Assigns tile to array to be accessed outside of delegate
       tileList[info.index] = tile;
-      deletionButtons[info.index-1] = tile.getElementById("btnDelete");
       
       let touch = tile.getElementById("touch");
       touch.addEventListener("click", evt => {
         console.log(`touched: ${info.index}`);
         if (info.index == 0) {
           view.showNav();
-        }else {
-          state.selectWaypoint(info.index);
-          // Update nav dest to currently selected Waypoint
-          if (state.getCurrent() != undefined && state.getCurrent.active != false){
-          // Update lblName
-          view.lblName.text = state.getCurrent().getName();
-          // Set nav destination to the current waypoint
-          nav.setDestination(state.getCurrent());
-          // Start navigation with watchSuccess callback 
-          nav.start(watchSuccess, locationError);
-        }
-          view.showNav();
-        }
+        }else if (info.index != state.getCurrent+1){
+          try {
+            state.getAtIndex(info.index-1).getName();
+            state.selectWaypoint(info.index);
+            // Update nav dest to currently selected Waypoint
+            if (state.getCurrent() != undefined && state.getCurrent.active != false){
+              // Update lblName
+              view.lblName.text = state.getCurrent().getName();
+              // Set nav destination to the current waypoint
+              nav.setDestination(state.getCurrent());
+              // Start navigation with watchSuccess callback 
+              nav.start(watchSuccess, locationError);
+              view.showNav();
+            }
+          } catch(err){ console.log ("Waypoint does not exist; " + err); }
+          } else {
+            
+          }
       });
       
       let btnDelete = tile.getElementById("btnDelete");
-      btnDelete.onactivate = function(evt) {
-        console.log("delete button " + info.index);
+      tile.getElementById("btnDelete").onactivate = function(evt) {
+        console.log("delete button pressed for " + info.index);
+        deletionIndex = info.index;
+        view.showPrompt();
       }
-      
+
+      let btnCancelNavigation = tile.getElementById("btnCancelNavigation");
+      tile.getElementById("btnCancelNavigation").onactivate = function(evt){
+        console.log("cancel navigation button pressed for " + info.index);
+        view.showCancel();
+      }
+
+      tile.getElementById("btnCancelNavigation").style.display = "none";
       if (info.index == 0) {
-       tile.getElementById("text").text = "Return";
+        tile.getElementById("text").text = "                   Return";
         tile.getElementById("btnDelete").style.display = "none";
        console.log("Changed tile name");
       } else{
+        
+        //Populates tile items with data from Location.js as they load
+          
         if (state.getAtIndex(info.index-1) != undefined){
           tile.getElementById("text").text = state.getAtIndex(info.index-1).getName();
           tile.getElementById("btnDelete").style.display = "inline";
@@ -268,12 +320,6 @@ myList.delegate = {
           tile.getElementById("text").text = "";
           tile.getElementById("btnDelete").style.display = "none";
         }
-      }
-      
-      tile.getElementById("btnDelete").onactivate = function(evt) {
-        console.log("delete button pressed for " + info.index);
-        deletionIndex = info.index;
-        view.showPrompt();
       }
     }
   }
