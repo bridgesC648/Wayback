@@ -26,6 +26,7 @@ import Navigator from "./Navigator";
 import State from "./State";
 import View from "./View";
 import * as fs from "fs";
+import { vibration } from "haptics";
 
 //------------------------------------------------------------------
 // FUNCTIONS
@@ -64,6 +65,7 @@ let view = new View();
 var tileList = [11];
 var deletionButtons = [10];
 var deletionIndex = 0;
+var hapticSetting = false;
 
 //-------------------------------------------------------------------
 // BUTTON EVENTS
@@ -75,6 +77,12 @@ view.btnSave.onactivate = function(evt) {
   } catch (err) {
     console.log(err);
   }
+  
+  if (hapticSetting)
+    vibration.start("confirmation");
+  else
+    console.log("Prevented Haptic Feedback");
+  
   geolocation.getCurrentPosition(
     savePosition,
     locationError,
@@ -169,14 +177,14 @@ messaging.peerSocket.onmessage = evt => {
        rename(names[i], state.waypoints[i].getFilename(), evt);
     }
   }
-  /*if (evt.data.key === "idle") {
+  if (evt.data.key === "idle") {
     let val = evt.data.newValue;
     idleSetting = (val === "true" ? true : false);
     console.log("idleSetting: " + idleSetting);
   } else if (evt.data.key === "haptics") {
     hapticSetting = (evt.data.newValue === "true" ? true : false);
     console.log(`Haptic feedback enabled = ${hapticSetting}`);
-  } */
+  }
 };
 
 function rename(setKey, txt, evt) {
