@@ -52,19 +52,6 @@ async function fadeInAndOut(svg, text) {
   }
 }
 
-//sends a vibration and logs the vibration type
-//does not perform if haptics setting is disabled
-function vibrate(p)
-{
-  if (hapticSetting)
-  {
-    vibration.start(p);
-    console.log("Vibration Pattern: " + p);
-  }
-  else
-    console.log("Prevented Vibration: " + p);
-}
-
 //-------------------------------------------------------------------
 // GLOBAL VARIABLES - IS IT BAD TO HAVE SO MANY?
 //-------------------------------------------------------------------
@@ -87,12 +74,14 @@ var hapticSetting = false;
 view.btnSave.onactivate = function(evt) {
   try {
     view.beacon.acquire();
-    
-    //vibrate on new waypoint added
-    vibrate("ping");
   } catch (err) {
     console.log(err);
   }
+  
+  if (hapticSetting)
+    vibration.start("confirmation");
+  else
+    console.log("Prevented Haptic Feedback");
   
   geolocation.getCurrentPosition(
     savePosition,
@@ -129,7 +118,6 @@ function savePosition(position) {
   } else {
     // at some point we should replace this with some on-screen indication
     // that max waypoints have been reached.
-    vibrate("bump");
     console.log("Could not add waypoint: Maximum waypoints reached.");
   }
   sendMessage();
@@ -165,8 +153,6 @@ function watchSuccess(position) {
     view.lblDistance.style.display="none";
     // change name label text, fade in and out.
     fadeInAndOut(view.lblName, "You have arrived!");
-    // alert ring
-    vibrate("alert");
   } else {
     // Update distance label
     view.lblDistance.text = nav.getDistance().toFixed(4);
