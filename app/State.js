@@ -23,6 +23,7 @@ export default class State {
   maxReached() { return this.numWaypoints == 10; }
   getCurrent() { return this.waypoints[this.current]; }
   getAtIndex(i) { return this.waypoints[i]; }
+  getCurrentIndex() {return this.current; }
   
   saveState() {
     let savedFilenames = [];

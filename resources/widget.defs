@@ -68,13 +68,12 @@
 
     <symbol id="my-item" href="#tile-list-item" class="list-item" display="none">
       <rect class="bg" />
-      <text id="text" />
+      <text id="text" text-anchor="middle" x="120" text-length="224"/>
       <rect class="line" />
       <rect id="touch" pointer-events="all" />
       <use id="btnDelete" href="#icon-button" class="medium-button application-fill plus-button3" />
+      <use id="btnCancelNavigation" href="#icon-button" class="medium-button application-fill plus-button4"/>
     </symbol>
-    
-    <!-- Delete Waypoint Button -->
     
   </defs>
 </svg>
