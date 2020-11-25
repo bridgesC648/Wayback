@@ -33,7 +33,7 @@
 
   </svg>
   
-  <!-- Tile List Stuff -->
+  <!-- Tile List - Keaton Archibald -->
   <svg id="WaypointsListScreen">
     
     <use id="myList" href="#tile-list">
@@ -59,7 +59,7 @@
     </use>
   </svg>
   
-  <!-- Waypoint Deletion Screen -->
+  <!-- Waypoint Deletion Screen - Keaton Archibald -->
   <svg id="DeleteWaypointsScreen">
     <text id="DeletionPrompt1" x="50%" y="50%"
       text-anchor="middle" fill="fb-white"
@@ -71,5 +71,19 @@
       font-weight="bold">delete this waypoint?</text>
     <use id="btnConfirmDeletion" href="#text-button" class="text-button left secondary application-fill" />
     <use id="btnCancelDeletion" href="#text-button" class="text-button right secondary application-fill" />
+  </svg>
+
+<!-- Cancel Navigation Screen - Keaton Archibald -->
+  <svg id="CancelNavigationScreen">
+    <text id="CancelPrompt1" x="50%" y="50%"
+      text-anchor="middle" fill="fb-white"
+      text-length="224" font-size="30"
+      font-weight="bold">Are you sure you want to</text>
+    <text id="CancelPrompt2" x="50%" y="50%+25"
+      text-anchor="middle" fill="fb-white"
+      text-length="224" font-size="30"
+      font-weight="bold">cancel navigation?</text>
+    <use id="btnConfirmCancelNavigation" href="#text-button" class="text-button left secondary application-fill" />
+    <use id="btnCancelCancelNavigation" href="#text-button" class="text-button right secondary application-fill" />
   </svg>
 </svg>

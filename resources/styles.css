@@ -36,6 +36,9 @@
 .plus-button3 #image {
   href: "images/trashIcon.png"
 }
+.plus-button4 #image {
+  href: "images/cancelNavigation.png"
+}
 
 #btnSave {
   x: 20;
@@ -52,6 +55,11 @@
   y: 15%;
 }
 
+#btnCancelNavigation {
+  x: 240;
+  y: 15%;
+}
+
 #btnReturn #text {
   text-buffer: "Return";
 }
@@ -64,8 +72,12 @@
   text-buffer: "No";
 }
 
-#toggleDisplayButton{
-  fill: green;
+#btnConfirmCancelNavigation #text {
+  text-buffer: "Yes";
+}
+
+#btnCancelCancelNavigation #text {
+  text-buffer: "No";
 }
 
 .list-item {
