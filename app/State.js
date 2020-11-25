@@ -16,6 +16,7 @@ export default class State {
       this.numWaypoints = 0;    // Number to track how many Waypoints.
       this.total = 0;           // Number to track total Waypoints ever.
       this.current = 0;         // Track the currently displayed index
+      // Variable for hapticsEnabled here
     }
   } // constructor
       
@@ -37,6 +38,7 @@ export default class State {
       numWaypoints: this.numWaypoints,
       total: this.total,
       current: this.current
+      // corresponding haptics :  value here
     };
     fs.writeFileSync("state.txt", json, "cbor");
   }

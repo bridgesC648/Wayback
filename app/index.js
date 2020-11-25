@@ -170,6 +170,7 @@ function locationError(error) {
 // Message is received
 messaging.peerSocket.onmessage = evt => {
   console.log(`1 App received: ${JSON.stringify(evt)}`);
+
   let names = ["newName1", "newName2", "newName3", "newName4", "newName5",
                "newName6", "newName7", "newName8", "newName9", "newName10"];  // array of setttings keys
   for (let i = 0; i < names.length; i++) {
