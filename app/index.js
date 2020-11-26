@@ -195,12 +195,9 @@ function watchSuccess(position) {
     view.lblDistance.style.display="none";
     // change name label text, fade in and out.
     fadeInAndOut(view.lblName, "You have arrived!");
-<<<<<<< HEAD
     // alert ring
     vibrate("alert");
-=======
     view.phi.rotate(360);
->>>>>>> 6f1dabb71fc85058e07ed713aababf4f7a97e67f
   } else {
     // Update the "arrows"
     view.phi.rotate(360 - nav.getHeading() + nav.getAngle());
