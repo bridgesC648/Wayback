@@ -26,7 +26,6 @@ import Navigator from "./Navigator";
 import State from "./State";
 import View from "./View";
 import * as fs from "fs";
-import { vibration } from "haptics";
 
 //------------------------------------------------------------------
 // FUNCTIONS
@@ -52,19 +51,6 @@ async function fadeInAndOut(svg, text) {
   }
 }
 
-//sends a vibration and logs the vibration type
-//does not perform if haptics setting is disabled
-function vibrate(p)
-{
-  if (hapticSetting)
-  {
-    vibration.start(p);
-    console.log("Vibration Pattern: " + p);
-  }
-  else
-    console.log("Prevented Vibration: " + p);
-}
-
 //-------------------------------------------------------------------
 // GLOBAL VARIABLES - IS IT BAD TO HAVE SO MANY?
 //-------------------------------------------------------------------
@@ -77,7 +63,6 @@ let view = new View();
 // Contains the tiles of the tile list
 var tileList = [11];
 var deletionIndex = 0;
-var hapticSetting = false;
 
 //-------------------------------------------------------------------
 // BUTTON EVENTS
@@ -86,13 +71,9 @@ var hapticSetting = false;
 view.btnSave.onactivate = function(evt) {
   try {
     view.beacon.acquire();
-    
-    //vibrate on new waypoint added
-    vibrate("ping");
   } catch (err) {
     console.log(err);
   }
-  
   geolocation.getCurrentPosition(
     savePosition,
     locationError,
@@ -140,7 +121,6 @@ function savePosition(position) {
   } else {
     // at some point we should replace this with some on-screen indication
     // that max waypoints have been reached.
-    vibrate("bump");
     console.log("Could not add waypoint: Maximum waypoints reached.");
   }
   sendMessage();
@@ -195,12 +175,7 @@ function watchSuccess(position) {
     view.lblDistance.style.display="none";
     // change name label text, fade in and out.
     fadeInAndOut(view.lblName, "You have arrived!");
-<<<<<<< HEAD
-    // alert ring
-    vibrate("alert");
-=======
     view.phi.rotate(360);
->>>>>>> 6f1dabb71fc85058e07ed713aababf4f7a97e67f
   } else {
     // Update the "arrows"
     view.phi.rotate(360 - nav.getHeading() + nav.getAngle());
@@ -230,14 +205,14 @@ messaging.peerSocket.onmessage = evt => {
        rename(names[i], state.waypoints[i].getFilename(), evt);
     }
   }
-  if (evt.data.key === "idle") {
+  /*if (evt.data.key === "idle") {
     let val = evt.data.newValue;
     idleSetting = (val === "true" ? true : false);
     console.log("idleSetting: " + idleSetting);
   } else if (evt.data.key === "haptics") {
     hapticSetting = (evt.data.newValue === "true" ? true : false);
     console.log(`Haptic feedback enabled = ${hapticSetting}`);
-  }
+  } */
 };
 
 function rename(setKey, txt, evt) {
