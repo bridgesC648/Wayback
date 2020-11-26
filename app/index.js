@@ -77,7 +77,6 @@ let view = new View();
 // Contains the tiles of the tile list
 var tileList = [11];
 var deletionIndex = 0;
-var hapticSetting = false;
 
 //-------------------------------------------------------------------
 // BUTTON EVENTS
@@ -86,13 +85,9 @@ var hapticSetting = false;
 view.btnSave.onactivate = function(evt) {
   try {
     view.beacon.acquire();
-    
-    //vibrate on new waypoint added
-    vibrate("ping");
   } catch (err) {
     console.log(err);
   }
-  
   geolocation.getCurrentPosition(
     savePosition,
     locationError,
@@ -140,7 +135,6 @@ function savePosition(position) {
   } else {
     // at some point we should replace this with some on-screen indication
     // that max waypoints have been reached.
-    vibrate("bump");
     console.log("Could not add waypoint: Maximum waypoints reached.");
   }
   sendMessage();
@@ -227,14 +221,14 @@ messaging.peerSocket.onmessage = evt => {
        rename(names[i], state.waypoints[i].getFilename(), evt);
     }
   }
-  if (evt.data.key === "idle") {
+  /*if (evt.data.key === "idle") {
     let val = evt.data.newValue;
     idleSetting = (val === "true" ? true : false);
     console.log("idleSetting: " + idleSetting);
   } else if (evt.data.key === "haptics") {
     hapticSetting = (evt.data.newValue === "true" ? true : false);
     console.log(`Haptic feedback enabled = ${hapticSetting}`);
-  }
+  } */
 };
 
 function rename(setKey, txt, evt) {
