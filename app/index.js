@@ -26,6 +26,7 @@ import Navigator from "./Navigator";
 import State from "./State";
 import View from "./View";
 import * as fs from "fs";
+import { vibration } from "haptics"; // KL
 
 //------------------------------------------------------------------
 // FUNCTIONS
@@ -51,8 +52,21 @@ async function fadeInAndOut(svg, text) {
   }
 }
 
+//sends a vibration and logs the vibration type
+//does not perform if haptics setting is disabled  KL
+function vibrate(p)
+{
+  if (hapticSetting)
+  {
+    vibration.start(p);
+    console.log("Vibration Pattern: " + p);
+  }
+  else
+    console.log("Prevented Vibration: " + p);
+}
+
 //-------------------------------------------------------------------
-// GLOBAL VARIABLES - IS IT BAD TO HAVE SO MANY?
+// GLOBAL VARIABLES 
 //-------------------------------------------------------------------
 // State object, holds Waypoints and manipulates them
 var state = new State();
@@ -175,6 +189,8 @@ function watchSuccess(position) {
     view.lblDistance.style.display="none";
     // change name label text, fade in and out.
     fadeInAndOut(view.lblName, "You have arrived!");
+    // alert ring
+    vibrate("alert");
     view.phi.rotate(360);
   } else {
     // Update the "arrows"
