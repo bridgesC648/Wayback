@@ -26,7 +26,7 @@ import Navigator from "./Navigator";
 import State from "./State";
 import View from "./View";
 import * as fs from "fs";
-import { vibration } from "haptics";
+import { vibration } from "haptics"; // KL
 
 //------------------------------------------------------------------
 // FUNCTIONS
@@ -53,7 +53,7 @@ async function fadeInAndOut(svg, text) {
 }
 
 //sends a vibration and logs the vibration type
-//does not perform if haptics setting is disabled
+//does not perform if haptics setting is disabled  KL
 function vibrate(p)
 {
   if (hapticSetting)
@@ -66,7 +66,7 @@ function vibrate(p)
 }
 
 //-------------------------------------------------------------------
-// GLOBAL VARIABLES - IS IT BAD TO HAVE SO MANY?
+// GLOBAL VARIABLES 
 //-------------------------------------------------------------------
 // State object, holds Waypoints and manipulates them
 var state = new State();
