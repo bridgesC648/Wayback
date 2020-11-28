@@ -187,10 +187,14 @@ function watchSuccess(position) {
     nav.stop();
     // hide distance label
     view.lblDistance.style.display="none";
+    // hide the name label.
+    view.lblName.style.display="none";
     // change name label text, fade in and out.
-    fadeInAndOut(view.lblName, "You have arrived!");
+    //fadeInAndOut(view.lblName, "You have arrived!");
     // alert ring
     vibrate("alert");
+    // Change to fireworks.
+    document.location.replace("fireworks.view");
     view.phi.rotate(360);
   } else {
     // Update the "arrows"
