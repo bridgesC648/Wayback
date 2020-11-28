@@ -329,16 +329,11 @@
   
    <!--Text Animation STP  -->
   <text x="-50%" y="50%" fill="fb-cyan" text-anchor="middle" pointer-events="visible">You Have Arrived!
-  
     <!-- fly-in -->
-    <animate attributeName="opacity" begin="load+5" to="1" from="0" dur="2" />
-    <animate attributeName="x"  begin="load+5" to="50%" from="-50%" dur="2" />
+    <animate attributeName="x"  begin="load+5" to="50%" from="-50%" dur="1" /> 
   
-  <!-- fly-out -->
-    
-  <animate attributeName="x"  begin="load +9" from="50%" to="150%" dur="2" />
-  <animate attributeName="opacity" begin="load +9" from="1" to="0" dur="2" />
+    <!-- fly-out -->
+    <animate attributeName="x"  begin="load +9" from="50%" to="150%" dur="1" />
   
   </text>
-  
 </svg>

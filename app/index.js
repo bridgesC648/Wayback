@@ -52,6 +52,12 @@ async function fadeInAndOut(svg, text) {
   }
 }
 
+async function backToNav() {
+  // Method to hackily return to the navigation screen after animation.
+  await sleep(10000);
+  document.history.back().then(view.showNav);
+}
+
 //sends a vibration and logs the vibration type
 //does not perform if haptics setting is disabled  KL
 function vibrate(p)
@@ -77,6 +83,7 @@ let view = new View();
 // Contains the tiles of the tile list
 var tileList = [11];
 var deletionIndex = 0;
+var hapticSetting;
 
 //-------------------------------------------------------------------
 // BUTTON EVENTS
@@ -173,11 +180,9 @@ function refreshList(){ // Code to refresh the tile list so it matches the waypo
     }
 }
 
+// Christopher Bridges
 function watchSuccess(position) {
   // Gets called when position changes.
-  console.log("------------------------------------------------");
-  console.log("POSITION CHANGED: CALLING watchSuccess()");
-  console.log("------------------------------------------------");
   console.log("Updating navigator.");
   nav.update(position);
   if (nav.arrived()) {
@@ -194,7 +199,7 @@ function watchSuccess(position) {
     // alert ring
     vibrate("alert");
     // Change to fireworks.
-    document.location.replace("fireworks.view");
+    document.location.assign("fireworks.view").then(backToNav);
     view.phi.rotate(360);
   } else {
     // Update the "arrows"
