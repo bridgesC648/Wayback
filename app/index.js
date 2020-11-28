@@ -77,6 +77,7 @@ let view = new View();
 // Contains the tiles of the tile list
 var tileList = [11];
 var deletionIndex = 0;
+var hapticSetting;
 
 //-------------------------------------------------------------------
 // BUTTON EVENTS
