@@ -190,7 +190,7 @@ function watchSuccess(position) {
     // Update the "arrows"
     view.phi.rotate(360 - nav.getHeading() + nav.getAngle());
     // Update distance label
-    view.lblDistance.text = nav.getDistance().toFixed(4);
+    view.lblDistance.text = nav.getDistance().toFixed(4) + " m";
     // Show the label if it is hidden.
     if (view.lblDistance.style.display == "none")
       view.lblDistance.style.display = "";
