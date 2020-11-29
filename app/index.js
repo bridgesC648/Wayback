@@ -54,7 +54,7 @@ async function fadeInAndOut(svg, text) {
 
 async function backToNav() {
   // Method to hackily return to the navigation screen after animation.
-  await sleep(10000);
+  await sleep(9500);
   document.history.back().then(view.showNav);
 }
 

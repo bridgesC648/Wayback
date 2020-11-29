@@ -219,10 +219,8 @@
     <animateTransform attributeType="scale" from="1" to="5"  begin="load +3"  dur="2" />
   <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
   </g>   
-  
-  
-  
-   <!--Cluster 3   Launch STP  -->
+
+  <!--Cluster 3   Launch STP  -->
   <g transform="translate(0,0)" pointer-events="visible">
     <animateTransform attributeType="translate"
       from="0,0" to="0,-60%" begin="load +3"  dur="1" />
@@ -324,16 +322,14 @@
     <animateTransform attributeType="scale" from="1" to="5"  begin="load +4"  dur="2" />
   <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
   </g>
-  
-  
-  
+
    <!--Text Animation STP  -->
   <text x="-50%" y="50%" fill="fb-cyan" text-anchor="middle" pointer-events="visible">You Have Arrived!
     <!-- fly-in -->
     <animate attributeName="x"  begin="load+5" to="50%" from="-50%" dur="1" /> 
   
     <!-- fly-out -->
-    <animate attributeName="x"  begin="load +9" from="50%" to="150%" dur="1" />
+    <animate attributeName="x"  begin="load +8" from="50%" to="150%" dur="1" />
   
   </text>
 </svg>
