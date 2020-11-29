@@ -36,22 +36,6 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve,ms));
 }
 
-// THIS SHIT NEEDS TO BE REPLACED WITH PROPER ANIMATION
-async function fadeInAndOut(svg, text) {
-  // Method that hackily fades the label in and then out
-  svg.text = text;
-  svg.style.opacity = 0;
-  while ( svg.style.opacity < 1) {
-    svg.style.opacity += 0.1;
-    await sleep(100);
-  }
-  await sleep(1000);
-  while (svg.style.opacity > 0) {
-    svg.style.opacity -= 0.1;
-    await sleep(100);
-  }
-}
-
 async function backToNav() {
   // Method to hackily return to the navigation screen after animation.
   await sleep(9500);
@@ -60,14 +44,11 @@ async function backToNav() {
 
 //sends a vibration and logs the vibration type
 //does not perform if haptics setting is disabled  KL
-function vibrate(p)
-{
-  if (hapticSetting)
-  {
+function vibrate(p) {
+  if (hapticSetting) {
     vibration.start(p);
     console.log("Vibration Pattern: " + p);
-  }
-  else
+  } else
     console.log("Prevented Vibration: " + p);
 }
 
@@ -182,6 +163,11 @@ function refreshList(){ // Code to refresh the tile list so it matches the waypo
 
 // Christopher Bridges
 function watchSuccess(position) {
+  // Stop the beacon if it is active
+  if (view.beacon.acquiring) {
+    console.log("Navigation started.");
+    view.beacon.disable();
+  }
   // Gets called when position changes.
   console.log("Updating navigator.");
   nav.update(position);
@@ -194,8 +180,6 @@ function watchSuccess(position) {
     view.lblDistance.style.display="none";
     // hide the name label.
     view.lblName.style.display="none";
-    // change name label text, fade in and out.
-    //fadeInAndOut(view.lblName, "You have arrived!");
     // alert ring
     vibrate("alert");
     // Change to fireworks.
@@ -216,6 +200,10 @@ function watchSuccess(position) {
 
 function locationError(error) {
   console.log("Error: " + error.code, "Message: " + error.message);
+  // Disable beacon, since we aren't trying to acquire anymore.
+  view.beacon.disable();
+  // Tell navigation to stop because it ain't going to start.
+  nav.stop();
 }
 
 // Settings socket ------------------------------------------
@@ -305,14 +293,16 @@ myList.delegate = {
               view.lblName.style.display = "inline";
               // Set nav destination to the current waypoint
               nav.setDestination(state.getCurrent());
+              // Start beacon animation - CMB
+              view.beacon.acquire();
               // Start navigation with watchSuccess callback 
               nav.start(watchSuccess, locationError);
               view.showNav();
             }
           } catch(err){ console.log ("Waypoint does not exist; " + err); }
-          } else {
-            
-          }
+        } else {
+            // Was something supposed to go here?
+        }
       });
       
       let btnDelete = tile.getElementById("btnDelete");

@@ -36,11 +36,14 @@ export default class Navigator {
     if (this.watchID != null)
       geolocation.clearWatch(this.watchID);
     this.watchID = geolocation.watchPosition(success, error, {enableHighAccuracy: true});
-    console.log("Navigation started.");
   }
   
   stop(){
-    geolocation.clearWatch(this.watchID);
+    try {
+      geolocation.clearWatch(this.watchID);
+    } catch (err) {
+      console.log(err);
+    }
     this.navigating = false;
     console.log("Navigation stopped.");
   }
