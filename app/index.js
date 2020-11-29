@@ -52,6 +52,12 @@ async function fadeInAndOut(svg, text) {
   }
 }
 
+async function backToNav() {
+  // Method to hackily return to the navigation screen after animation.
+  await sleep(9500);
+  document.history.back().then(view.showNav);
+}
+
 //sends a vibration and logs the vibration type
 //does not perform if haptics setting is disabled  KL
 function vibrate(p)
@@ -174,11 +180,9 @@ function refreshList(){ // Code to refresh the tile list so it matches the waypo
     }
 }
 
+// Christopher Bridges
 function watchSuccess(position) {
   // Gets called when position changes.
-  console.log("------------------------------------------------");
-  console.log("POSITION CHANGED: CALLING watchSuccess()");
-  console.log("------------------------------------------------");
   console.log("Updating navigator.");
   nav.update(position);
   if (nav.arrived()) {
@@ -188,10 +192,14 @@ function watchSuccess(position) {
     nav.stop();
     // hide distance label
     view.lblDistance.style.display="none";
+    // hide the name label.
+    view.lblName.style.display="none";
     // change name label text, fade in and out.
-    fadeInAndOut(view.lblName, "You have arrived!");
+    //fadeInAndOut(view.lblName, "You have arrived!");
     // alert ring
     vibrate("alert");
+    // Change to fireworks.
+    document.location.assign("fireworks.view").then(backToNav);
     view.phi.rotate(360);
   } else {
     // Update the "arrows"
