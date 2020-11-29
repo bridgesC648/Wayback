@@ -69,6 +69,7 @@ var hapticSetting;
 //-------------------------------------------------------------------
 // BUTTON EVENTS
 //-------------------------------------------------------------------
+// I am really not sure why some of these can't just be in the View class.
 // Gets called when the Save button gets pressed
 view.btnSave.onactivate = function(evt) {
   try {
@@ -119,7 +120,7 @@ function savePosition(position) {
   view.beacon.disable();
   // Log coordinates to console
   if (!state.maxReached()) {
-    let waypointIndex = state.add(position);
+    state.add(position);
   } else {
     // at some point we should replace this with some on-screen indication
     // that max waypoints have been reached.
@@ -140,10 +141,10 @@ function refreshList(){ // Code to refresh the tile list so it matches the waypo
     } 
     try {
       tileList[i].getElementById("btnCancelNavigation").style.display = "none";
-    } catch { }
+    } catch (err) { }
   }
     
-    //Only shows the cancel navigation button if the app is navigating on the waypoint that is being naigatied too
+    // Only shows the cancel navigation button if the app is navigating on the waypoint that is being navigated to
     if (!nav.isNav()) {
       try {
         if(state.getCurrent().getName() != ""){

@@ -38,6 +38,7 @@ function mySettings(props) {
         placeholder = "Enter new name..."
         settingsKey="newName5"
         />
+        
         <TextInput
         label= {props.settingsStorage.getItem("Waypoint6")}
         placeholder = "Enter new name..."
