@@ -3,6 +3,15 @@ function mySettings(props) {
   return (
     <Page>
       <Section
+        description={<Text>Enable or disable haptic feedback upon arrival.</Text>}
+        title="">        
+        <Toggle
+          label="Haptic Feedback"
+          settingsKey="haptics"
+        />
+      </Section>
+
+      <Section
         title={<Text bold align="center">Modify Waypoints</Text>}>
         <TextInput
         label= {props.settingsStorage.getItem("Waypoint1")}
@@ -29,6 +38,7 @@ function mySettings(props) {
         placeholder = "Enter new name..."
         settingsKey="newName5"
         />
+        
         <TextInput
         label= {props.settingsStorage.getItem("Waypoint6")}
         placeholder = "Enter new name..."
@@ -54,17 +64,7 @@ function mySettings(props) {
         placeholder = "Enter new name..."
         settingsKey="newName10"
         />
-      </Section>
-      
-      <Section
-        description={<Text>Enable or disable haptic feedback upon arrival.</Text>}
-        title="">        
-        <Toggle
-          label="Haptic Feedback"
-          settingsKey="haptics"
-        />
-      </Section>
-      
+      </Section>      
     </Page>
   );
 }

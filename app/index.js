@@ -36,22 +36,6 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve,ms));
 }
 
-// THIS SHIT NEEDS TO BE REPLACED WITH PROPER ANIMATION
-async function fadeInAndOut(svg, text) {
-  // Method that hackily fades the label in and then out
-  svg.text = text;
-  svg.style.opacity = 0;
-  while ( svg.style.opacity < 1) {
-    svg.style.opacity += 0.1;
-    await sleep(100);
-  }
-  await sleep(1000);
-  while (svg.style.opacity > 0) {
-    svg.style.opacity -= 0.1;
-    await sleep(100);
-  }
-}
-
 async function backToNav() {
   // Method to hackily return to the navigation screen after animation.
   await sleep(9500);
@@ -60,14 +44,11 @@ async function backToNav() {
 
 //sends a vibration and logs the vibration type
 //does not perform if haptics setting is disabled  KL
-function vibrate(p)
-{
-  if (hapticSetting)
-  {
+function vibrate(p) {
+  if (hapticSetting) {
     vibration.start(p);
     console.log("Vibration Pattern: " + p);
-  }
-  else
+  } else
     console.log("Prevented Vibration: " + p);
 }
 
@@ -88,6 +69,7 @@ var hapticSetting;
 //-------------------------------------------------------------------
 // BUTTON EVENTS
 //-------------------------------------------------------------------
+// I am really not sure why some of these can't just be in the View class.
 // Gets called when the Save button gets pressed
 view.btnSave.onactivate = function(evt) {
   try {
@@ -138,7 +120,7 @@ function savePosition(position) {
   view.beacon.disable();
   // Log coordinates to console
   if (!state.maxReached()) {
-    let waypointIndex = state.add(position);
+    state.add(position);
   } else {
     // at some point we should replace this with some on-screen indication
     // that max waypoints have been reached.
@@ -159,10 +141,10 @@ function refreshList(){ // Code to refresh the tile list so it matches the waypo
     } 
     try {
       tileList[i].getElementById("btnCancelNavigation").style.display = "none";
-    } catch { }
+    } catch (err) { }
   }
     
-    //Only shows the cancel navigation button if the app is navigating on the waypoint that is being naigatied too
+    // Only shows the cancel navigation button if the app is navigating on the waypoint that is being navigated to
     if (!nav.isNav()) {
       try {
         if(state.getCurrent().getName() != ""){
@@ -182,6 +164,11 @@ function refreshList(){ // Code to refresh the tile list so it matches the waypo
 
 // Christopher Bridges
 function watchSuccess(position) {
+  // Stop the beacon if it is active
+  if (view.beacon.acquiring) {
+    console.log("Navigation started.");
+    view.beacon.disable();
+  }
   // Gets called when position changes.
   console.log("Updating navigator.");
   nav.update(position);
@@ -194,8 +181,6 @@ function watchSuccess(position) {
     view.lblDistance.style.display="none";
     // hide the name label.
     view.lblName.style.display="none";
-    // change name label text, fade in and out.
-    //fadeInAndOut(view.lblName, "You have arrived!");
     // alert ring
     vibrate("alert");
     // Change to fireworks.
@@ -216,12 +201,21 @@ function watchSuccess(position) {
 
 function locationError(error) {
   console.log("Error: " + error.code, "Message: " + error.message);
+  // Disable beacon, since we aren't trying to acquire anymore.
+  view.beacon.disable();
+  // Tell navigation to stop because it ain't going to start.
+  nav.stop();
 }
 
 // Settings socket ------------------------------------------
 // Message is received
 messaging.peerSocket.onmessage = evt => {
   console.log(`1 App received: ${JSON.stringify(evt)}`);
+
+  if (evt.data.key === "haptics"){
+    hapticSetting = (evt.data.newValue === "true" ? true : false);
+    console.log(`Haptic feedback enabled = ${hapticSetting}`);
+  }
 
   let names = ["newName1", "newName2", "newName3", "newName4", "newName5",
                "newName6", "newName7", "newName8", "newName9", "newName10"];  // array of setttings keys
@@ -230,14 +224,6 @@ messaging.peerSocket.onmessage = evt => {
        rename(names[i], state.waypoints[i].getFilename(), evt);
     }
   }
-  /*if (evt.data.key === "idle") {
-    let val = evt.data.newValue;
-    idleSetting = (val === "true" ? true : false);
-    console.log("idleSetting: " + idleSetting);
-  } else if (evt.data.key === "haptics") {
-    hapticSetting = (evt.data.newValue === "true" ? true : false);
-    console.log(`Haptic feedback enabled = ${hapticSetting}`);
-  } */
 };
 
 function rename(setKey, txt, evt) {
@@ -296,7 +282,7 @@ myList.delegate = {
         console.log(`touched: ${info.index}`);
         if (info.index == 0) {
           view.showNav();
-        }else if (info.index != state.getCurrent+1){
+        } else if (info.index != state.getCurrent+1){
           try {
             state.getAtIndex(info.index-1).getName();
             state.selectWaypoint(info.index);
@@ -304,16 +290,20 @@ myList.delegate = {
             if (state.getCurrent() != undefined && state.getCurrent.active != false){
               // Update lblName
               view.lblName.text = state.getCurrent().getName();
+              // Make sure lblName is visible
+              view.lblName.style.display = "inline";
               // Set nav destination to the current waypoint
               nav.setDestination(state.getCurrent());
+              // Start beacon animation - CMB
+              view.beacon.acquire();
               // Start navigation with watchSuccess callback 
               nav.start(watchSuccess, locationError);
               view.showNav();
             }
           } catch(err){ console.log ("Waypoint does not exist; " + err); }
-          } else {
-            
-          }
+        } else {
+            // Was something supposed to go here?
+        }
       });
       
       let btnDelete = tile.getElementById("btnDelete");

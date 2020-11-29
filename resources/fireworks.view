@@ -1,88 +1,105 @@
-<svg viewport-fill="black">
-  
- <!--  
-  <gradientRect x="0" y="0" width="100%" height="100%"
-    gradient-type="bilinear"
-    gradient-x1="30" gradient-y1="30"
-    gradient-x2="100%-60" gradient-y2="100%-60"
-    gradient-color1="red"
-    gradient-color2="red"
-    gradient-color3="darkorange"
-    gradient-color4="orange" />
-  -->
-  
+<svg viewport-fill="black"> 
   
   <!--Cluster 1   Launch STP  -->
   <g transform="translate(0,0)" pointer-events="visible">
     <animateTransform attributeType="translate"
       from="0,0" to="0,-80%" begin="load +1"  dur="1" />
-    <rect x="165" y="400" width="5" height="10" fill="fb-blue" />
+    <rect x="165" y="400" width="5" height="10" fill="#00ccff" />
     <animate attributeName="opacity" begin="load +1" to="0" from="1" dur="1" />
   </g>
-  
-  
+  <!-- Cluster 1 45% CMB -->
+  <g transform="translate(0,0)" pointer-events="visible">
+    <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
+    <animateTransform attributeType="translate"
+    from="0,0" to="20%,20%" begin="load +2"  dur="2" />
+    <circle cx="165" cy="110" r="5" fill="#00ccff" />
+    <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
+  </g>
+  <g transform="translate(0,0)" pointer-events="visible">
+    <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
+    <animateTransform attributeType="translate"
+    from="0,0" to="20%,-20%" begin="load +2"  dur="2" />
+    <circle cx="165" cy="110" r="5" fill="#00ccff" />
+    <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
+  </g>
+  <g transform="translate(0,0)" pointer-events="visible">
+    <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
+    <animateTransform attributeType="translate"
+    from="0,0" to="-20%,-20%" begin="load +2"  dur="2" />
+    <circle cx="165" cy="110" r="5" fill="#00ccff" />
+    <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
+  </g>
+  <g transform="translate(0,0)" pointer-events="visible">
+    <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
+    <animateTransform attributeType="translate"
+    from="0,0" to="-20%, 20%" begin="load +2"  dur="2" />
+    <circle cx="165" cy="110" r="5" fill="#00ccff" />
+    <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
+  </g>
+    
+
   <!--Cluster 1   L&R STP -->
    <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="-20%,0" begin="load +2"  dur="2" />
+      from="0,0" to="-50%,0" begin="load +2"  dur="2" />
     <circle cx="165" cy="110" r="5" fill="fb-blue" />
      <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="20%,0" begin="load +2"  dur="2" />
+      from="0,0" to="50%,0" begin="load +2"  dur="2" />
     <circle cx="165" cy="110" r="5" fill="fb-blue" />
      <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="-15%,0" begin="load +2"  dur="2" />
+      from="0,0" to="-45%,0" begin="load +2"  dur="2" />
     <circle cx="165" cy="110" r="5" fill="fb-blue" />
      <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="15%,0" begin="load +2"  dur="2" />
+      from="0,0" to="45%,0" begin="load +2"  dur="2" />
     <circle cx="165" cy="110" r="5" fill="fb-blue" />
      <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
   </g>
-  
-  
+
   <!--Cluster 1   U&D STP  -->
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="0,-20%" begin="load +2"  dur="2" />
+      from="0,0" to="0,-50%" begin="load +2"  dur="2" />
     <circle cx="165" cy="110" r="5" fill="fb-blue" />
      <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="0,20%" begin="load +2"  dur="2" />
+      from="0,0" to="0,50%" begin="load +2"  dur="2" />
     <circle cx="165" cy="110" r="5" fill="fb-blue" />
      <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="0,-15%" begin="load +2"  dur="2" />
+      from="0,0" to="0,-45%" begin="load +2"  dur="2" />
     <circle cx="165" cy="110" r="5" fill="fb-blue" />
      <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="0,15%" begin="load +2"  dur="2" />
+      from="0,0" to="0,45%" begin="load +2"  dur="2" />
     <circle cx="165" cy="110" r="5" fill="fb-blue" />
      <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
   </g>
   
   <!-- Firework 1 STP -->
+  <!--
   <g pointer-events="visible" transform="translate(165,110)">
     <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
     <animateTransform attributeType="rotate" from="0" to="720" begin="load +2" dur="3" />
@@ -114,43 +131,72 @@
     <animateTransform attributeType="scale" from="1" to="5"  begin="load +2"  dur="2" />
   <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
   </g>  
-  
-  
+  -->
   
   <!--Cluster 2   Launch STP  -->
   <g transform="translate(0,0)" pointer-events="visible">
     <animateTransform attributeType="translate"
       from="0,0" to="0,-70%" begin="load +2"  dur="1" />
-    <rect x="100" y="400" width="5" height="10"  />
+    <rect x="100" y="400" width="5" height="10" fill="#ff00d4" />
     <animate attributeName="opacity" begin="load +2" to="0" from="1" dur="1" />
+  </g>
+
+  <!-- Cluster 2 45 % CMB -->
+  <g transform="translate(0,0)" pointer-events="visible">
+    <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
+    <animateTransform attributeType="translate"
+      from="0,0" to="50%, 50%" begin="load +3"  dur="2" />
+    <circle cx="100" cy="150" r="5" fill="#ff00d4" />
+    <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
+  </g>
+  <g transform="translate(0,0)" pointer-events="visible">
+    <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
+    <animateTransform attributeType="translate"
+      from="0,0" to="50%,-50%" begin="load +3"  dur="2" />
+    <circle cx="100" cy="150" r="5" fill="#ff00d4" />
+    <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
+  </g>
+  <g transform="translate(0,0)" pointer-events="visible">
+    <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
+    <animateTransform attributeType="translate"
+      from="0,0" to="-50%, -50%" begin="load +3"  dur="2" />
+    <circle cx="100" cy="150" r="5" fill="#ff00d4" />
+    <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
+  </g>
+  <g transform="translate(0,0)" pointer-events="visible">
+    <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
+    <animateTransform attributeType="translate"
+      from="0,0" to="-50%, 50%" begin="load +3"  dur="2" />
+    <circle cx="100" cy="150" r="5" fill="#ff00d4" />
+    <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
   </g>
   
   <!--Cluster 2   L&R STP  -->
    <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="-20%,0" begin="load +3"  dur="2" />
+      from="0,0" to="-30%,0" begin="load +3"  dur="2" />
     <circle cx="100" cy="150" r="5" fill="fb-red" />
      <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="20%,0" begin="load +3"  dur="2" />
+      from="0,0" to="30%,0" begin="load +3"  dur="2" />
     <circle cx="100" cy="150" r="5" fill="fb-red" />
      <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="-15%,0" begin="load +3"  dur="2" />
+      from="0,0" to="-25%,0" begin="load +3"  dur="2" />
     <circle cx="100" cy="150" r="5" fill="fb-red" />
      <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="15%,0" begin="load +3"  dur="2" />
+      from="0,0" to="25%,0" begin="load +3"  dur="2" />
     <circle cx="100" cy="150" r="5" fill="fb-red" />
      <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
   </g>
@@ -160,34 +206,35 @@
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="0,-20%" begin="load +3"  dur="2" />
+      from="0,0" to="0,-30%" begin="load +3"  dur="2" />
     <circle cx="100" cy="150" r="5" fill="fb-red" />
      <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="0,20%" begin="load +3"  dur="2" />
+      from="0,0" to="0,30%" begin="load +3"  dur="2" />
     <circle cx="100" cy="150" r="5" fill="fb-red" />
      <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="0,-15%" begin="load +3"  dur="2" />
+      from="0,0" to="0,-25%" begin="load +3"  dur="2" />
     <circle cx="100" cy="150" r="5" fill="fb-red" />
      <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="0,15%" begin="load +3"  dur="2" />
+      from="0,0" to="0,25%" begin="load +3"  dur="2" />
     <circle cx="100" cy="150" r="5" fill="fb-red" />
      <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
   </g>
   
   
  <!-- Firework 2 STP -->
+ <!--
   <g pointer-events="visible" transform="translate(100,150)">
     <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
     <animateTransform attributeType="rotate" from="0" to="720" begin="load +3" dur="3" />
@@ -218,7 +265,7 @@
    <circle cx="0" cy="0" r="6" fill="red" />
     <animateTransform attributeType="scale" from="1" to="5"  begin="load +3"  dur="2" />
   <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
-  </g>   
+  </g>   -->
 
   <!--Cluster 3   Launch STP  -->
   <g transform="translate(0,0)" pointer-events="visible">
@@ -227,33 +274,63 @@
     <rect x="230" y="400" width="5" height="10" fill="fb-green" />
     <animate attributeName="opacity" begin="load +3" to="0" from="1" dur="1" />
   </g>
+
+  <!-- Cluster 3 45% CMB -->
+  <g transform="translate(0,0)" pointer-events="visible">
+    <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
+    <animateTransform attributeType="translate"
+    from="0,0" to="15%,15%" begin="load +4"  dur="2" />
+    <circle cx="230" cy="170" r="5" fill="#00fc37" />
+    <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
+  </g>
+  <g transform="translate(0,0)" pointer-events="visible">
+    <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
+    <animateTransform attributeType="translate"
+    from="0,0" to="15%,-15%" begin="load +4"  dur="2" />
+    <circle cx="230" cy="170" r="5" fill="#00fc37" />
+    <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
+  </g>
+  <g transform="translate(0,0)" pointer-events="visible">
+    <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
+    <animateTransform attributeType="translate"
+    from="0,0" to="-15%,-15%" begin="load +4"  dur="2" />
+    <circle cx="230" cy="170" r="5" fill="#00fc37" />
+    <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
+  </g>
+  <g transform="translate(0,0)" pointer-events="visible">
+    <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
+    <animateTransform attributeType="translate"
+    from="0,0" to="-15%, 15%" begin="load +4"  dur="2" />
+    <circle cx="230" cy="170" r="5" fill="#00fc37" />
+    <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
+  </g>
   
   <!--Cluster 3   L&R STP  -->
    <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="-20%,0" begin="load +4"  dur="2" />
+      from="0,0" to="-30%,0" begin="load +4"  dur="2" />
     <circle cx="230" cy="170" r="5" fill="fb-green" />
      <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="20%,0" begin="load +4"  dur="2" />
+      from="0,0" to="30%,0" begin="load +4"  dur="2" />
     <circle cx="230" cy="170" r="5" fill="fb-green" />
      <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="-15%,0" begin="load +4"  dur="2" />
+      from="0,0" to="-25%,0" begin="load +4"  dur="2" />
     <circle cx="230" cy="170" r="5" fill="fb-green" />
      <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="15%,0" begin="load +4"  dur="2" />
+      from="0,0" to="25%,0" begin="load +4"  dur="2" />
     <circle cx="230" cy="170" r="5" fill="fb-green" />
      <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
   </g>
@@ -263,34 +340,35 @@
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="0,-20%" begin="load +4"  dur="2" />
+      from="0,0" to="0,-30%" begin="load +4"  dur="2" />
     <circle cx="230" cy="170" r="5" fill="fb-green" />
      <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="0,20%" begin="load +4"  dur="2" />
+      from="0,0" to="0,30%" begin="load +4"  dur="2" />
     <circle cx="230" cy="170" r="5" fill="fb-green" />
      <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="0,-15%" begin="load +4"  dur="2" />
+      from="0,0" to="0,-25%" begin="load +4"  dur="2" />
     <circle cx="230" cy="170" r="5" fill="fb-green" />
      <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
   </g>
   <g transform="translate(0,0)" pointer-events="visible">
      <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
      <animateTransform attributeType="translate"
-      from="0,0" to="0,15%" begin="load +4"  dur="2" />
+      from="0,0" to="0,25%" begin="load +4"  dur="2" />
     <circle cx="230" cy="170" r="5" fill="fb-green" />
      <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
   </g>
   
   
   <!-- Firework 3 STP -->
+  <!-- 
   <g pointer-events="visible" transform="translate(230,170)">
     <animate attributeName="opacity" begin="load" to="0" from="1" dur="0" />
     <animateTransform attributeType="rotate" from="0" to="720" begin="load +4" dur="3" />
@@ -321,7 +399,7 @@
    <circle cx="0" cy="0" r="6" fill="green" />
     <animateTransform attributeType="scale" from="1" to="5"  begin="load +4"  dur="2" />
   <animate attributeName="opacity" begin="load +4" to="0" from="1" dur="1" />
-  </g>
+  </g> -->
 
    <!--Text Animation STP  -->
   <text x="-50%" y="50%" fill="fb-cyan" text-anchor="middle" pointer-events="visible">You Have Arrived!
