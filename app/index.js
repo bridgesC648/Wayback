@@ -223,6 +223,11 @@ function locationError(error) {
 messaging.peerSocket.onmessage = evt => {
   console.log(`1 App received: ${JSON.stringify(evt)}`);
 
+  if (evt.data.key === "haptics"){
+    hapticSetting = (evt.data.newValue === "true" ? true : false);
+    console.log(`Haptic feedback enabled = ${hapticSetting}`);
+  }
+
   let names = ["newName1", "newName2", "newName3", "newName4", "newName5",
                "newName6", "newName7", "newName8", "newName9", "newName10"];  // array of setttings keys
   for (let i = 0; i < names.length; i++) {
@@ -230,14 +235,6 @@ messaging.peerSocket.onmessage = evt => {
        rename(names[i], state.waypoints[i].getFilename(), evt);
     }
   }
-  /*if (evt.data.key === "idle") {
-    let val = evt.data.newValue;
-    idleSetting = (val === "true" ? true : false);
-    console.log("idleSetting: " + idleSetting);
-  } else if (evt.data.key === "haptics") {
-    hapticSetting = (evt.data.newValue === "true" ? true : false);
-    console.log(`Haptic feedback enabled = ${hapticSetting}`);
-  } */
 };
 
 function rename(setKey, txt, evt) {
