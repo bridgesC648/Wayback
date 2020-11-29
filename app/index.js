@@ -293,7 +293,7 @@ myList.delegate = {
         console.log(`touched: ${info.index}`);
         if (info.index == 0) {
           view.showNav();
-        }else if (info.index != state.getCurrent+1){
+        } else if (info.index != state.getCurrent+1){
           try {
             state.getAtIndex(info.index-1).getName();
             state.selectWaypoint(info.index);
@@ -301,6 +301,8 @@ myList.delegate = {
             if (state.getCurrent() != undefined && state.getCurrent.active != false){
               // Update lblName
               view.lblName.text = state.getCurrent().getName();
+              // Make sure lblName is visible
+              view.lblName.style.display = "inline";
               // Set nav destination to the current waypoint
               nav.setDestination(state.getCurrent());
               // Start navigation with watchSuccess callback 
