@@ -19,28 +19,29 @@ Sprint #6 - Navigation Feature + Tile List w/ deletable Waypoints + persistence
           Refactoring
             - Moved hide/show SVG elements to View class   
 */
-import document from "document";
-import * as messaging from "messaging";
-import geolocation from "geolocation";
-import Navigator from "./Navigator";
-import State from "./State";
-import View from "./View";
-import * as fs from "fs";
-import { vibration } from "haptics"; // KL
+import document from "document";        // Christopher Bridges
+import * as messaging from "messaging"; // Nicholas Worrell
+import geolocation from "geolocation";  // Christopher Bridges
+import Navigator from "./Navigator";    // Christopher Bridges
+import State from "./State";            // Christopher Bridges
+import View from "./View";              // Christopher Bridges
+import * as fs from "fs";               // Christopher Bridges
+import { vibration } from "haptics";    // Kevin Le
 
 //------------------------------------------------------------------
 // FUNCTIONS
 //------------------------------------------------------------------
-// HOLY JANK BATMAN
+// Christopher Bridges
+/*
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve,ms));
-}
-
+}*/
+/*
 async function backToNav() {
   // Method to hackily return to the navigation screen after animation.
   await sleep(9500);
   document.history.back().then(view.showNav);
-}
+} */
 
 //sends a vibration and logs the vibration type
 //does not perform if haptics setting is disabled  KL
@@ -184,7 +185,7 @@ function watchSuccess(position) {
     // alert ring
     vibrate("alert");
     // Change to fireworks.
-    document.location.assign("fireworks.view").then(backToNav);
+    document.location.assign("fireworks.view").then(view.backToNav);
     view.phi.rotate(360);
   } else {
     // Update the "arrows"
