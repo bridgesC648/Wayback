@@ -17,59 +17,32 @@ Sprint #6 - Navigation Feature + Tile List w/ deletable Waypoints + persistence
           Updated app to include current Settings functionality
           Renamed MainView -> View, renamed mainView -> view
           Refactoring
-            - Moved hide/show SVG elements to View class   
+            - Moved hide/show SVG elements to View class
+  ~11/30: Lots of refactoring
+          Fireworks tweaks
 */
-import document from "document";
-import * as messaging from "messaging";
-import geolocation from "geolocation";
-import Navigator from "./Navigator";
-import State from "./State";
-import View from "./View";
-import * as fs from "fs";
-import { vibration } from "haptics"; // KL
-
-//------------------------------------------------------------------
-// FUNCTIONS
-//------------------------------------------------------------------
-// HOLY JANK BATMAN
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve,ms));
-}
-
-async function backToNav() {
-  // Method to hackily return to the navigation screen after animation.
-  await sleep(9500);
-  document.history.back().then(view.showNav);
-}
-
-//sends a vibration and logs the vibration type
-//does not perform if haptics setting is disabled  KL
-function vibrate(p) {
-  if (hapticSetting) {
-    vibration.start(p);
-    console.log("Vibration Pattern: " + p);
-  } else
-    console.log("Prevented Vibration: " + p);
-}
+import document from "document";        // Christopher Bridges
+import * as messaging from "messaging"; // Nicholas Worrell
+import geolocation from "geolocation";  // Christopher Bridges
+import Navigator from "./Navigator";    // Christopher Bridges
+import State from "./State";            // Christopher Bridges
+import View from "./View";              // Christopher Bridges
+import * as fs from "fs";               // Christopher Bridges
+import {refreshList, editString, vibrate, sendMessage} from "../common/utils"; // Christopher Bridges
 
 //-------------------------------------------------------------------
 // GLOBAL VARIABLES 
 //-------------------------------------------------------------------
-// State object, holds Waypoints and manipulates them
-var state = new State();
-// Navigator object, handles navigational features
-let nav = new Navigator();
-// Contains all of the UI elements. 
-let view = new View();
-// Contains the tiles of the tile list
-var tileList = [11];
+var state = new State();    // State object, holds Waypoints and manipulates them 
+let nav = new Navigator();  // Navigator object, handles navigational features
+let view = new View();      // Contains all of the UI elements. 
+var tileList = [11];        // Contains the tiles of the tile list
 var deletionIndex = 0;
-var hapticSetting;
+var hapticSetting;          // This should be in state, but whatever.
 
 //-------------------------------------------------------------------
 // BUTTON EVENTS
 //-------------------------------------------------------------------
-// I am really not sure why some of these can't just be in the View class.
 // Gets called when the Save button gets pressed
 view.btnSave.onactivate = function(evt) {
   try {
@@ -86,19 +59,19 @@ view.btnSave.onactivate = function(evt) {
 // Gets called when the Return button gets pressed.
 view.btnReturn.onactivate = function(evt) {
   view.showTiles();
-  refreshList();
+  refreshList(tileList, state, nav);
 }
 
 view.btnConfirmDeletion.onactivate = function(evt) {
   state.delete(deletionIndex);
   view.showTiles();
-  refreshList();
-  sendMessage();
+  refreshList(tileList, state, nav);
+  sendMessage(state);
 }
 
 view.btnCancelDeletion.onactivate = function(evt){
   view.showTiles();
-  refreshList();
+  refreshList(tileList, state, nav);
 }
 
 view.btnConfirmCancelNavigation.onactivate = function(evt) {
@@ -111,6 +84,7 @@ view.btnConfirmCancelNavigation.onactivate = function(evt) {
 
 view.btnCancelCancelNavigation.onactivate = function(evt){
   view.showTiles();
+  refreshList(tileList, state, nav);
 }
 
 //-------------------------------------------------------------------
@@ -118,76 +92,36 @@ view.btnCancelCancelNavigation.onactivate = function(evt){
 //-------------------------------------------------------------------
 function savePosition(position) {
   view.beacon.disable();
-  // Log coordinates to console
-  if (!state.maxReached()) {
+  if (!state.maxReached()) {  // If < max waypoints added
     state.add(position);
   } else {
     // at some point we should replace this with some on-screen indication
     // that max waypoints have been reached.
     console.log("Could not add waypoint: Maximum waypoints reached.");
   }
-  sendMessage();
-}
-
-function refreshList(){ // Code to refresh the tile list so it matches the waypoints : Keaton Archibald
-  for (var i = 1; i <= 11; i++){
-    //Repopulates the list's labels and if buttons should be shown.
-    if (state.getAtIndex(i-1) != undefined && tileList[i] != undefined){
-      tileList[i].getElementById("text").text = state.getAtIndex(i-1).getName();
-      tileList[i].getElementById("btnDelete").style.display = "inline";
-    } else if (tileList[i] != undefined){
-      tileList[i].getElementById("text").text = "";
-      tileList[i].getElementById("btnDelete").style.display = "none";
-    } 
-    try {
-      tileList[i].getElementById("btnCancelNavigation").style.display = "none";
-    } catch (err) { }
-  }
-    
-    // Only shows the cancel navigation button if the app is navigating on the waypoint that is being navigated to
-    if (!nav.isNav()) {
-      try {
-        if(state.getCurrent().getName() != ""){
-          tileList[state.getCurrentIndex() + 1].getElementById("btnDelete").style.display = "inline";
-          console.log("no error")
-        }
-      } catch(err) {
-        tileList[state.getCurrentIndex() + 1].getElementById("btnDelete").style.display = "none";
-        console.log(err);
-      }
-      tileList[state.getCurrentIndex() + 1].getElementById("btnCancelNavigation").style.display = "none"; 
-    } else {
-      tileList[state.getCurrentIndex() + 1].getElementById("btnDelete").style.display = "none";
-      tileList[state.getCurrentIndex() + 1].getElementById("btnCancelNavigation").style.display = "inline";
-    }
+  sendMessage(state);
 }
 
 // Christopher Bridges
 function watchSuccess(position) {
-  // Stop the beacon if it is active
-  if (view.beacon.acquiring) {
+  // Gets called when position changes.
+  if (view.beacon.acquiring) {            // Stop the beacon if it is active
     console.log("Navigation started.");
     view.beacon.disable();
   }
-  // Gets called when position changes.
   console.log("Updating navigator.");
   nav.update(position);
   if (nav.arrived()) {
-    // announce arrival to log
-    console.log("You have arrived!");
-    // Stop navigator
-    nav.stop();
-    // hide distance label
-    view.lblDistance.style.display="none";
-    // hide the name label.
-    view.lblName.style.display="none";
-    // alert ring
-    vibrate("alert");
+    console.log("You have arrived!");     // Announce arrival to log
+    nav.stop();                           // Stop navigator
+    view.lblDistance.style.display="none";// Hide distance label
+    view.lblName.style.display="none";    // Hide the name label.
+    vibrate("alert", hapticSetting);      // Alert ring
     // Change to fireworks.
-    document.location.assign("fireworks.view").then(backToNav);
+    document.location.assign("fireworks.view").then(view.backToNav);
     view.phi.rotate(360);
   } else {
-    // Update the "arrows"
+    // Update the direction indicator
     view.phi.rotate(360 - nav.getHeading() + nav.getAngle());
     // Update distance label
     view.lblDistance.text = nav.getDistance().toFixed(4) + " m";
@@ -211,14 +145,13 @@ function locationError(error) {
 // Message is received
 messaging.peerSocket.onmessage = evt => {
   //console.log(`1 App received: ${JSON.stringify(evt)}`);
-
   if (evt.data.key === "haptics"){
     hapticSetting = (evt.data.newValue === "true" ? true : false);
     console.log(`Haptic feedback enabled = ${hapticSetting}`);
   }
-
+  // array of setttings keys
   let names = ["newName1", "newName2", "newName3", "newName4", "newName5",
-               "newName6", "newName7", "newName8", "newName9", "newName10"];  // array of setttings keys
+               "newName6", "newName7", "newName8", "newName9", "newName10"];  
   for (let i = 0; i < names.length; i++) {
     if (typeof state.waypoints[i] != "undefined") {
        rename(names[i], state.waypoints[i].getFilename(), evt);
@@ -232,19 +165,11 @@ function rename(setKey, txt, evt) {
     let jsonData = fs.readFileSync(txt, "cbor");
     jsonData.name = newName;
     fs.writeFileSync(txt, jsonData, "cbor");
-    sendMessage();
+    sendMessage(state);
     let stateJSON = fs.readFileSync("state.txt", "cbor");
     state.restoreState(stateJSON);
-    refreshList();
+    refreshList(tileList, state, nav);
   }
-}
-
-function editString(string) { 
-  var start = string.indexOf(':')
-  var res = string.substring(start + 3, string.length - 4);
-  var length = 20;                                           // max number of characters
-  var trim = res.substring(0, length);
-  return trim;
 }
 
 // Message socket opens
@@ -261,7 +186,6 @@ messaging.peerSocket.onclose = () => {
 view.showNav();
 let myList = document.getElementById("myList");
 let NUM_ELEMS = 11;
-var tiles = [11];
 myList.delegate = {
   getTileInfo: (index) => {
     return {
@@ -271,7 +195,6 @@ myList.delegate = {
     };
   },
   configureTile: (tile, info) => {
-    //console.log(`Item: ${info.index}`)
     if (info.type == "my-pool") {
       
       //Assigns tile to array to be accessed outside of delegate
@@ -301,19 +224,15 @@ myList.delegate = {
               view.showNav();
             }
           } catch(err){ console.log ("Waypoint does not exist; " + err); }
-        } else {
-            // Was something supposed to go here?
-        }
+        } else { }
       });
       
-      let btnDelete = tile.getElementById("btnDelete");
       tile.getElementById("btnDelete").onactivate = function(evt) {
         //console.log("delete button pressed for " + info.index);
         deletionIndex = info.index;
         view.showPrompt();
       }
 
-      let btnCancelNavigation = tile.getElementById("btnCancelNavigation");
       tile.getElementById("btnCancelNavigation").onactivate = function(evt){
         //console.log("cancel navigation button pressed for " + info.index);
         view.showCancel();
@@ -324,10 +243,9 @@ myList.delegate = {
         tile.getElementById("text").text = "                   Return";
         tile.getElementById("btnDelete").style.display = "none";
        console.log("Changed tile name");
-      } else{
+      } else {
         
-        //Populates tile items with data from Location.js as they load
-          
+        //Populates tile items with data from State.js as they load 
         if (state.getAtIndex(info.index-1) != undefined){
           tile.getElementById("text").text = state.getAtIndex(info.index-1).getName();
           tile.getElementById("btnDelete").style.display = "inline";
@@ -339,44 +257,14 @@ myList.delegate = {
     }
   }
 };
-
 myList.length = NUM_ELEMS;
 
 // Nicholas W. (Settings stuff)
 messaging.peerSocket.addEventListener("open", (evt) => {
   console.log("Ready to send or receive messages");
-  sendMessage();
+  sendMessage(state);
 });
 
 messaging.peerSocket.addEventListener("error", (err) => {
   console.error(`Connection error: ${err.code} - ${err.message}`);
 });
-
-function sendMessage() {
-  let blank = "waypoint not saved yet";
-  
-  let data = {
-    Waypoint1 : blank,
-    Waypoint2 : blank,
-    Waypoint3 : blank,
-    Waypoint4 : blank,
-    Waypoint5 : blank,
-    Waypoint6 : blank,
-    Waypoint7 : blank,
-    Waypoint8 : blank,
-    Waypoint9 : blank,
-    Waypoint10 : blank
-  }
-
-    let counter = 0;
-    for (let property in data) {
-      if (typeof state.waypoints[counter] != "undefined") {
-      data[property] = fs.readFileSync(state.waypoints[counter].getFilename(), "cbor").name;
-    }  
-      counter++;
-    } 
-
-if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
-  messaging.peerSocket.send(data);
-   }
-}

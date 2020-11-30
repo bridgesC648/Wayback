@@ -1,5 +1,7 @@
 import PointerSymbol from "./PointerSymbol";
 import document from "document";
+import { sleep } from "../common/utils";
+
 export default class View {
   // All of the main view's UI elements and functions that manipulate them
   constructor() {
@@ -10,7 +12,6 @@ export default class View {
       document.getElementById("animPhi")
     );
     
-    // WHY AREN'T YOU WORKING, BACON!?
     this.beacon = {
       useID : document.getElementById("signalRing"),
       scale : document.getElementById("ringScale"),
@@ -81,4 +82,9 @@ export default class View {
     this.cancelPrompt.style.display = "inline";
   }
   
+  async backToNav() {
+    // Method to hackily return to the navigation screen after animation.
+    await sleep(9500);
+    document.history.back().then(this.showNav);
+  }
 }
