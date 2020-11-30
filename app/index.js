@@ -28,7 +28,7 @@ import View from "./View";              // Christopher Bridges
 import * as fs from "fs";               // Christopher Bridges
 import { vibration } from "haptics";    // Kevin Le
 
-import {refreshList} from "../common/utils"; // Christopher Bridges
+import {refreshList, editString} from "../common/utils"; // Christopher Bridges
 
 //------------------------------------------------------------------
 // FUNCTIONS
@@ -103,6 +103,7 @@ view.btnConfirmCancelNavigation.onactivate = function(evt) {
 
 view.btnCancelCancelNavigation.onactivate = function(evt){
   view.showTiles();
+  refreshList(tileList, state, nav);
 }
 
 //-------------------------------------------------------------------
@@ -198,14 +199,6 @@ function rename(setKey, txt, evt) {
   }
 }
 
-function editString(string) { 
-  var start = string.indexOf(':')
-  var res = string.substring(start + 3, string.length - 4);
-  var length = 20;                                           // max number of characters
-  var trim = res.substring(0, length);
-  return trim;
-}
-
 // Message socket opens
 messaging.peerSocket.onopen = () => {
   console.log("App Socket Open");
@@ -220,7 +213,6 @@ messaging.peerSocket.onclose = () => {
 view.showNav();
 let myList = document.getElementById("myList");
 let NUM_ELEMS = 11;
-var tiles = [11];
 myList.delegate = {
   getTileInfo: (index) => {
     return {
@@ -230,7 +222,6 @@ myList.delegate = {
     };
   },
   configureTile: (tile, info) => {
-    //console.log(`Item: ${info.index}`)
     if (info.type == "my-pool") {
       
       //Assigns tile to array to be accessed outside of delegate
@@ -260,19 +251,15 @@ myList.delegate = {
               view.showNav();
             }
           } catch(err){ console.log ("Waypoint does not exist; " + err); }
-        } else {
-            // Was something supposed to go here?
-        }
+        } else { }
       });
       
-      let btnDelete = tile.getElementById("btnDelete");
       tile.getElementById("btnDelete").onactivate = function(evt) {
         //console.log("delete button pressed for " + info.index);
         deletionIndex = info.index;
         view.showPrompt();
       }
 
-      let btnCancelNavigation = tile.getElementById("btnCancelNavigation");
       tile.getElementById("btnCancelNavigation").onactivate = function(evt){
         //console.log("cancel navigation button pressed for " + info.index);
         view.showCancel();
@@ -283,10 +270,9 @@ myList.delegate = {
         tile.getElementById("text").text = "                   Return";
         tile.getElementById("btnDelete").style.display = "none";
        console.log("Changed tile name");
-      } else{
+      } else {
         
-        //Populates tile items with data from Location.js as they load
-          
+        //Populates tile items with data from State.js as they load 
         if (state.getAtIndex(info.index-1) != undefined){
           tile.getElementById("text").text = state.getAtIndex(info.index-1).getName();
           tile.getElementById("btnDelete").style.display = "inline";
@@ -298,7 +284,6 @@ myList.delegate = {
     }
   }
 };
-
 myList.length = NUM_ELEMS;
 
 // Nicholas W. (Settings stuff)
@@ -330,7 +315,7 @@ function sendMessage() {
     let counter = 0;
     for (let property in data) {
       if (typeof state.waypoints[counter] != "undefined") {
-      data[property] = fs.readFileSync(state.waypoints[counter].getFilename(), "cbor").name;
+        data[property] = fs.readFileSync(state.waypoints[counter].getFilename(), "cbor").name;
     }  
       counter++;
     } 

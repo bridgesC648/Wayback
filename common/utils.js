@@ -1,3 +1,11 @@
+export function editString(string) { 
+    var start = string.indexOf(':')
+    var res = string.substring(start + 3, string.length - 4);
+    var length = 20;                                           // max number of characters
+    var trim = res.substring(0, length);
+    return trim;
+  }
+
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve,ms));
 }
