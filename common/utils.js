@@ -1,4 +1,6 @@
 import { vibration } from "haptics";    // Kevin Le
+import * as fs from "fs";
+import * as messaging from "messaging";
 
 export function editString(string) { 
     var start = string.indexOf(':')
@@ -43,6 +45,32 @@ export function refreshList(tileList, state, nav){
       } else {
         tileList[state.getCurrentIndex() + 1].getElementById("btnDelete").style.display = "none";
         tileList[state.getCurrentIndex() + 1].getElementById("btnCancelNavigation").style.display = "inline";
+    }
+}
+
+export function sendMessage(state) {
+    let blank = "waypoint not saved yet";
+    let data = {
+      Waypoint1 : blank,
+      Waypoint2 : blank,
+      Waypoint3 : blank,
+      Waypoint4 : blank,
+      Waypoint5 : blank,
+      Waypoint6 : blank,
+      Waypoint7 : blank,
+      Waypoint8 : blank,
+      Waypoint9 : blank,
+      Waypoint10 : blank
+    }
+    let counter = 0;
+    for (let property in data) {
+        if (typeof state.waypoints[counter] != "undefined") {
+            data[property] = fs.readFileSync(state.waypoints[counter].getFilename(), "cbor").name;
+        }  
+        counter++;
+    } 
+    if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+        messaging.peerSocket.send(data);
     }
 }
 

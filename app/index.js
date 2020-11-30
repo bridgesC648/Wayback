@@ -26,7 +26,7 @@ import Navigator from "./Navigator";    // Christopher Bridges
 import State from "./State";            // Christopher Bridges
 import View from "./View";              // Christopher Bridges
 import * as fs from "fs";               // Christopher Bridges
-import {refreshList, editString, vibrate} from "../common/utils"; // Christopher Bridges
+import {refreshList, editString, vibrate, sendMessage} from "../common/utils"; // Christopher Bridges
 
 //-------------------------------------------------------------------
 // GLOBAL VARIABLES 
@@ -64,7 +64,7 @@ view.btnConfirmDeletion.onactivate = function(evt) {
   state.delete(deletionIndex);
   view.showTiles();
   refreshList(tileList, state, nav);
-  sendMessage();
+  sendMessage(state);
 }
 
 view.btnCancelDeletion.onactivate = function(evt){
@@ -97,7 +97,7 @@ function savePosition(position) {
     // that max waypoints have been reached.
     console.log("Could not add waypoint: Maximum waypoints reached.");
   }
-  sendMessage();
+  sendMessage(state);
 }
 
 // Christopher Bridges
@@ -163,7 +163,7 @@ function rename(setKey, txt, evt) {
     let jsonData = fs.readFileSync(txt, "cbor");
     jsonData.name = newName;
     fs.writeFileSync(txt, jsonData, "cbor");
-    sendMessage();
+    sendMessage(state);
     let stateJSON = fs.readFileSync("state.txt", "cbor");
     state.restoreState(stateJSON);
     refreshList(tileList, state, nav);
@@ -260,13 +260,13 @@ myList.length = NUM_ELEMS;
 // Nicholas W. (Settings stuff)
 messaging.peerSocket.addEventListener("open", (evt) => {
   console.log("Ready to send or receive messages");
-  sendMessage();
+  sendMessage(state);
 });
 
 messaging.peerSocket.addEventListener("error", (err) => {
   console.error(`Connection error: ${err.code} - ${err.message}`);
 });
-
+/*
 function sendMessage() {
   let blank = "waypoint not saved yet";
   
@@ -294,4 +294,4 @@ function sendMessage() {
   if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
     messaging.peerSocket.send(data);
   }
-}
+} */
