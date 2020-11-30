@@ -18,7 +18,7 @@ export default class Navigator {
     // Angle between heading and dest
     this.angle = null;   
     this.navigating = false;
-    this.idle = false;
+
   }
   
   idle(success, error) {
@@ -76,35 +76,35 @@ export default class Navigator {
     
     if (long2 > long1 && lat2 > lat1) {
       // vector points northeast.
-      console.log("Vector points northeast.");
+      //console.log("Vector points northeast.");
       return theta;
     } else if (long2 > long1 && lat2 == lat1) {
       // vector points due east
-      console.log("Vector points due east.");
+      //console.log("Vector points due east.");
       return 90;
     } else if (long2 > long1 && lat2 < lat1) {
       // vector points south east
-      console.log("Vector points southeast.");
+      //console.log("Vector points southeast.");
       return 180 - theta;
     } else if (long2 == long1 && lat2 < lat1) {
       // vector points due south.
-      console.log("Vector points due south.");
+      //console.log("Vector points due south.");
       return 180;
     } else if (long2 < long1 && lat2 < lat1) {
       // vector point south west
-      console.log("Vector points south west.");
+      //console.log("Vector points south west.");
       return 180 + theta;
     } else if (long2 < long1 && lat2 == lat1) {
       // vector points due west
-      console.log("Vector points due west.");
+      //console.log("Vector points due west.");
       return 270;
     } else if (long2 < long1 && lat2 > lat1) {
       // vector points northwest
-      console.log("Vector points northwest.");
+      //console.log("Vector points northwest.");
       return 360 - theta;
     } else {
       // vector points due north
-      console.log("Vector points due north.");
+      //console.log("Vector points due north.");
       return 0;
     }
   }
@@ -128,14 +128,14 @@ export default class Navigator {
   
   update(position) {
     // Update the user's heading
-    console.log("UPDATING HEADING------------------------------");
+    //console.log("UPDATING HEADING------------------------------");
     this.updateHeading(position);    
     // Update distance
-    console.log("UPDATING DISTANCE-----------------------------");
+    //console.log("UPDATING DISTANCE-----------------------------");
     this.distance = this.checkDistance(position);
-    console.log("Distance to destination: " + this.distance);
+    //console.log("Distance to destination: " + this.distance);
     // Update angle
-    console.log("UPDATING ANGLE PHI----------------------------");
+    //console.log("UPDATING ANGLE PHI----------------------------");
     this.angle = this.calcAngle(this.destination.getPosition(), position);
     // set last position to current position.
     this.lastPosition = position;

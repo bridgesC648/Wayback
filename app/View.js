@@ -3,8 +3,8 @@ import document from "document";
 export default class View {
   // All of the main view's UI elements and functions that manipulate them
   constructor() {
-    console.log("VIEW CONSTRUCTOR: ");
-    //PointerSymbol for the phi indicator (phi = direction toward waypoint)
+    //console.log("VIEW CONSTRUCTOR: ");
+    // PointerSymbol for the phi indicator (phi = direction toward waypoint)
     this.phi = new PointerSymbol(
       document.getElementById("phiInstance"),
       document.getElementById("animPhi")
@@ -32,7 +32,6 @@ export default class View {
         this.useID.style.opacity = 0;
       }
     }
-    console.log(JSON.stringify(this.beacon));
   
     // Buttons
     this.btnSave = document.getElementById("btnSave");

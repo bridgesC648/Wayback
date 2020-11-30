@@ -210,7 +210,7 @@ function locationError(error) {
 // Settings socket ------------------------------------------
 // Message is received
 messaging.peerSocket.onmessage = evt => {
-  console.log(`1 App received: ${JSON.stringify(evt)}`);
+  //console.log(`1 App received: ${JSON.stringify(evt)}`);
 
   if (evt.data.key === "haptics"){
     hapticSetting = (evt.data.newValue === "true" ? true : false);
@@ -271,7 +271,7 @@ myList.delegate = {
     };
   },
   configureTile: (tile, info) => {
-    console.log(`Item: ${info.index}`)
+    //console.log(`Item: ${info.index}`)
     if (info.type == "my-pool") {
       
       //Assigns tile to array to be accessed outside of delegate
@@ -279,7 +279,7 @@ myList.delegate = {
       
       let touch = tile.getElementById("touch");
       touch.addEventListener("click", evt => {
-        console.log(`touched: ${info.index}`);
+        //console.log(`touched: ${info.index}`);
         if (info.index == 0) {
           view.showNav();
         } else if (info.index != state.getCurrent+1){
@@ -308,14 +308,14 @@ myList.delegate = {
       
       let btnDelete = tile.getElementById("btnDelete");
       tile.getElementById("btnDelete").onactivate = function(evt) {
-        console.log("delete button pressed for " + info.index);
+        //console.log("delete button pressed for " + info.index);
         deletionIndex = info.index;
         view.showPrompt();
       }
 
       let btnCancelNavigation = tile.getElementById("btnCancelNavigation");
       tile.getElementById("btnCancelNavigation").onactivate = function(evt){
-        console.log("cancel navigation button pressed for " + info.index);
+        //console.log("cancel navigation button pressed for " + info.index);
         view.showCancel();
       }
 
