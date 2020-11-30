@@ -94,9 +94,11 @@ function savePosition(position) {
   view.beacon.disable();
   if (!state.maxReached()) {  // If < max waypoints added
     state.add(position);
+    view.waypointSaved();
   } else {
     // at some point we should replace this with some on-screen indication
     // that max waypoints have been reached.
+    view.saveWaypointFailed();
     console.log("Could not add waypoint: Maximum waypoints reached.");
   }
   util.sendMessage(state);
@@ -196,10 +198,7 @@ myList.delegate = {
   },
   configureTile: (tile, info) => {
     if (info.type == "my-pool") {
-      
-      //Assigns tile to array to be accessed outside of delegate
-      tileList[info.index] = tile;
-      
+      tileList[info.index] = tile;  //Assigns tile to array to be accessed outside of delegate
       let touch = tile.getElementById("touch");
       touch.addEventListener("click", evt => {
         //console.log(`touched: ${info.index}`);

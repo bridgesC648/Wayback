@@ -45,6 +45,7 @@ export default class View {
     // Labels (text elements)
     this.lblName = document.getElementById("lblName");
     this.lblDistance = document.getElementById("lblDistance");
+    this.lblMessage = document.getElementById("lblMessage");
 
     // SVG Elements.
     this.navigationView = document.getElementById("NavigationScreen");
@@ -52,6 +53,20 @@ export default class View {
     this.deletePrompt = document.getElementById("DeleteWaypointsScreen");
     this.cancelPrompt = document.getElementById("CancelNavigationScreen");
   } // constructor
+
+  waypointSaved() {
+    let msg = this.lblMessage.getElementById("txtMessage");
+    msg.text = "waypoint saved";
+    msg.style.fill = "fb-green";
+    this.lblMessage.animate("enable");
+  }
+
+  saveWaypointFailed() {
+    let msg = this.lblMessage.getElementById("txtMessage");
+    msg.text = "max waypoints reached";
+    msg.style.fill = "fb-red";
+    this.lblMessage.animate("enable");
+  }
 
   // Show methods
   showNav() {
