@@ -1,3 +1,5 @@
+import { vibration } from "haptics";    // Kevin Le
+
 export function editString(string) { 
     var start = string.indexOf(':')
     var res = string.substring(start + 3, string.length - 4);
@@ -27,12 +29,12 @@ export function refreshList(tileList, state, nav){
     }
       
       // Only shows the cancel navigation button if the app is navigating on the waypoint that is being navigated to
-      if (!nav.isNav()) {
+    if (!nav.isNav()) {
         try {
-          if(state.getCurrent().getName() != ""){
-            tileList[state.getCurrentIndex() + 1].getElementById("btnDelete").style.display = "inline";
-            console.log("no error")
-          }
+            if(state.getCurrent().getName() != ""){
+                tileList[state.getCurrentIndex() + 1].getElementById("btnDelete").style.display = "inline";
+                console.log("no error")
+            }
         } catch(err) {
           tileList[state.getCurrentIndex() + 1].getElementById("btnDelete").style.display = "none";
           console.log(err);
@@ -41,5 +43,15 @@ export function refreshList(tileList, state, nav){
       } else {
         tileList[state.getCurrentIndex() + 1].getElementById("btnDelete").style.display = "none";
         tileList[state.getCurrentIndex() + 1].getElementById("btnCancelNavigation").style.display = "inline";
-      }
+    }
+}
+
+//sends a vibration and logs the vibration type
+//does not perform if haptics setting is disabled  KL
+export function vibrate(p, hapticSetting) {
+    if (hapticSetting) {
+      vibration.start(p);
+      console.log("Vibration Pattern: " + p);
+    } else
+      console.log("Prevented Vibration: " + p);
   }

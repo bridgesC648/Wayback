@@ -26,23 +26,7 @@ import Navigator from "./Navigator";    // Christopher Bridges
 import State from "./State";            // Christopher Bridges
 import View from "./View";              // Christopher Bridges
 import * as fs from "fs";               // Christopher Bridges
-import { vibration } from "haptics";    // Kevin Le
-
-import {refreshList, editString} from "../common/utils"; // Christopher Bridges
-
-//------------------------------------------------------------------
-// FUNCTIONS
-//------------------------------------------------------------------
-
-//sends a vibration and logs the vibration type
-//does not perform if haptics setting is disabled  KL
-function vibrate(p) {
-  if (hapticSetting) {
-    vibration.start(p);
-    console.log("Vibration Pattern: " + p);
-  } else
-    console.log("Prevented Vibration: " + p);
-}
+import {refreshList, editString, vibrate} from "../common/utils"; // Christopher Bridges
 
 //-------------------------------------------------------------------
 // GLOBAL VARIABLES 
@@ -61,7 +45,6 @@ var hapticSetting;
 //-------------------------------------------------------------------
 // BUTTON EVENTS
 //-------------------------------------------------------------------
-// I am really not sure why some of these can't just be in the View class.
 // Gets called when the Save button gets pressed
 view.btnSave.onactivate = function(evt) {
   try {
@@ -124,25 +107,19 @@ function savePosition(position) {
 
 // Christopher Bridges
 function watchSuccess(position) {
-  // Stop the beacon if it is active
-  if (view.beacon.acquiring) {
+  // Gets called when position changes.
+  if (view.beacon.acquiring) {            // Stop the beacon if it is active
     console.log("Navigation started.");
     view.beacon.disable();
   }
-  // Gets called when position changes.
   console.log("Updating navigator.");
   nav.update(position);
   if (nav.arrived()) {
-    // announce arrival to log
-    console.log("You have arrived!");
-    // Stop navigator
-    nav.stop();
-    // hide distance label
-    view.lblDistance.style.display="none";
-    // hide the name label.
-    view.lblName.style.display="none";
-    // alert ring
-    vibrate("alert");
+    console.log("You have arrived!");     // Announce arrival to log
+    nav.stop();                           // Stop navigator
+    view.lblDistance.style.display="none";// Hide distance label
+    view.lblName.style.display="none";    // Hide the name label.
+    vibrate("alert", hapticSetting);      // Alert ring
     // Change to fireworks.
     document.location.assign("fireworks.view").then(view.backToNav);
     view.phi.rotate(360);
