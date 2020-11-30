@@ -17,7 +17,9 @@ Sprint #6 - Navigation Feature + Tile List w/ deletable Waypoints + persistence
           Updated app to include current Settings functionality
           Renamed MainView -> View, renamed mainView -> view
           Refactoring
-            - Moved hide/show SVG elements to View class   
+            - Moved hide/show SVG elements to View class
+  ~11/30: Lots of refactoring
+          Fireworks tweaks
 */
 import document from "document";        // Christopher Bridges
 import * as messaging from "messaging"; // Nicholas Worrell
@@ -266,32 +268,3 @@ messaging.peerSocket.addEventListener("open", (evt) => {
 messaging.peerSocket.addEventListener("error", (err) => {
   console.error(`Connection error: ${err.code} - ${err.message}`);
 });
-/*
-function sendMessage() {
-  let blank = "waypoint not saved yet";
-  
-  let data = {
-    Waypoint1 : blank,
-    Waypoint2 : blank,
-    Waypoint3 : blank,
-    Waypoint4 : blank,
-    Waypoint5 : blank,
-    Waypoint6 : blank,
-    Waypoint7 : blank,
-    Waypoint8 : blank,
-    Waypoint9 : blank,
-    Waypoint10 : blank
-  }
-
-  let counter = 0;
-  for (let property in data) {
-    if (typeof state.waypoints[counter] != "undefined") {
-      data[property] = fs.readFileSync(state.waypoints[counter].getFilename(), "cbor").name;
-    }  
-    counter++;
-  } 
-
-  if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
-    messaging.peerSocket.send(data);
-  }
-} */
