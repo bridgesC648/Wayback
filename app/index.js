@@ -28,7 +28,7 @@ import Navigator from "./Navigator";    // Christopher Bridges
 import State from "./State";            // Christopher Bridges
 import View from "./View";              // Christopher Bridges
 import * as fs from "fs";               // Christopher Bridges
-import {refreshList, editString, vibrate, sendMessage} from "../common/utils"; // Christopher Bridges
+import * as util from "../common/utils";// Christopher Bridges
 
 //-------------------------------------------------------------------
 // GLOBAL VARIABLES 
@@ -59,19 +59,19 @@ view.btnSave.onactivate = function(evt) {
 // Gets called when the Return button gets pressed.
 view.btnReturn.onactivate = function(evt) {
   view.showTiles();
-  refreshList(tileList, state, nav);
+  util.refreshList(tileList, state, nav);
 }
 
 view.btnConfirmDeletion.onactivate = function(evt) {
   state.delete(deletionIndex);
   view.showTiles();
-  refreshList(tileList, state, nav);
-  sendMessage(state);
+  util.refreshList(tileList, state, nav);
+  util.sendMessage(state);
 }
 
 view.btnCancelDeletion.onactivate = function(evt){
   view.showTiles();
-  refreshList(tileList, state, nav);
+  util.refreshList(tileList, state, nav);
 }
 
 view.btnConfirmCancelNavigation.onactivate = function(evt) {
@@ -84,7 +84,7 @@ view.btnConfirmCancelNavigation.onactivate = function(evt) {
 
 view.btnCancelCancelNavigation.onactivate = function(evt){
   view.showTiles();
-  refreshList(tileList, state, nav);
+  util.refreshList(tileList, state, nav);
 }
 
 //-------------------------------------------------------------------
@@ -99,7 +99,7 @@ function savePosition(position) {
     // that max waypoints have been reached.
     console.log("Could not add waypoint: Maximum waypoints reached.");
   }
-  sendMessage(state);
+  util.sendMessage(state);
 }
 
 // Christopher Bridges
@@ -116,7 +116,7 @@ function watchSuccess(position) {
     nav.stop();                           // Stop navigator
     view.lblDistance.style.display="none";// Hide distance label
     view.lblName.style.display="none";    // Hide the name label.
-    vibrate("alert", hapticSetting);      // Alert ring
+    util.vibrate("alert", hapticSetting);      // Alert ring
     // Change to fireworks.
     document.location.assign("fireworks.view").then(view.backToNav);
     view.phi.rotate(360);
@@ -161,14 +161,14 @@ messaging.peerSocket.onmessage = evt => {
 
 function rename(setKey, txt, evt) {
   if (evt.data.key === setKey && evt.data.newValue && fs.existsSync(txt)) {
-    let newName = editString(JSON.stringify(evt.data.newValue));
+    let newName = util.editString(JSON.stringify(evt.data.newValue));
     let jsonData = fs.readFileSync(txt, "cbor");
     jsonData.name = newName;
     fs.writeFileSync(txt, jsonData, "cbor");
-    sendMessage(state);
+    util.sendMessage(state);
     let stateJSON = fs.readFileSync("state.txt", "cbor");
     state.restoreState(stateJSON);
-    refreshList(tileList, state, nav);
+    util.refreshList(tileList, state, nav);
   }
 }
 
@@ -262,7 +262,7 @@ myList.length = NUM_ELEMS;
 // Nicholas W. (Settings stuff)
 messaging.peerSocket.addEventListener("open", (evt) => {
   console.log("Ready to send or receive messages");
-  sendMessage(state);
+  util.sendMessage(state);
 });
 
 messaging.peerSocket.addEventListener("error", (err) => {
