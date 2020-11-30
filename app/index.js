@@ -31,16 +31,12 @@ import {refreshList, editString, vibrate} from "../common/utils"; // Christopher
 //-------------------------------------------------------------------
 // GLOBAL VARIABLES 
 //-------------------------------------------------------------------
-// State object, holds Waypoints and manipulates them
-var state = new State();
-// Navigator object, handles navigational features
-let nav = new Navigator();
-// Contains all of the UI elements. 
-let view = new View();
-// Contains the tiles of the tile list
-var tileList = [11];
+var state = new State();    // State object, holds Waypoints and manipulates them 
+let nav = new Navigator();  // Navigator object, handles navigational features
+let view = new View();      // Contains all of the UI elements. 
+var tileList = [11];        // Contains the tiles of the tile list
 var deletionIndex = 0;
-var hapticSetting;
+var hapticSetting;          // This should be in state, but whatever.
 
 //-------------------------------------------------------------------
 // BUTTON EVENTS
@@ -94,8 +90,7 @@ view.btnCancelCancelNavigation.onactivate = function(evt){
 //-------------------------------------------------------------------
 function savePosition(position) {
   view.beacon.disable();
-  // Log coordinates to console
-  if (!state.maxReached()) {
+  if (!state.maxReached()) {  // If < max waypoints added
     state.add(position);
   } else {
     // at some point we should replace this with some on-screen indication
@@ -124,7 +119,7 @@ function watchSuccess(position) {
     document.location.assign("fireworks.view").then(view.backToNav);
     view.phi.rotate(360);
   } else {
-    // Update the "arrows"
+    // Update the direction indicator
     view.phi.rotate(360 - nav.getHeading() + nav.getAngle());
     // Update distance label
     view.lblDistance.text = nav.getDistance().toFixed(4) + " m";
@@ -148,14 +143,13 @@ function locationError(error) {
 // Message is received
 messaging.peerSocket.onmessage = evt => {
   //console.log(`1 App received: ${JSON.stringify(evt)}`);
-
   if (evt.data.key === "haptics"){
     hapticSetting = (evt.data.newValue === "true" ? true : false);
     console.log(`Haptic feedback enabled = ${hapticSetting}`);
   }
-
+  // array of setttings keys
   let names = ["newName1", "newName2", "newName3", "newName4", "newName5",
-               "newName6", "newName7", "newName8", "newName9", "newName10"];  // array of setttings keys
+               "newName6", "newName7", "newName8", "newName9", "newName10"];  
   for (let i = 0; i < names.length; i++) {
     if (typeof state.waypoints[i] != "undefined") {
        rename(names[i], state.waypoints[i].getFilename(), evt);
@@ -289,15 +283,15 @@ function sendMessage() {
     Waypoint10 : blank
   }
 
-    let counter = 0;
-    for (let property in data) {
-      if (typeof state.waypoints[counter] != "undefined") {
-        data[property] = fs.readFileSync(state.waypoints[counter].getFilename(), "cbor").name;
+  let counter = 0;
+  for (let property in data) {
+    if (typeof state.waypoints[counter] != "undefined") {
+      data[property] = fs.readFileSync(state.waypoints[counter].getFilename(), "cbor").name;
     }  
-      counter++;
-    } 
+    counter++;
+  } 
 
-if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
-  messaging.peerSocket.send(data);
-   }
+  if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+    messaging.peerSocket.send(data);
+  }
 }
