@@ -9,7 +9,6 @@ export default class PointerSymbol {
     this.anim.from = this.current;
     this.anim.to = toAngle;
     this.anim.dur = Math.abs(toAngle-this.current)/360;
-    //console.log(`Rotating from ${this.current} to ${toAngle}`);
     this.use.animate("enable");
     this.current = toAngle;
   }
