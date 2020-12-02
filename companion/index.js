@@ -2,7 +2,7 @@ import * as messaging from "messaging";
 import { settingsStorage } from "settings";
 
 
-messaging.peerSocket.addEventListener("message", (evt) => {
+messaging.peerSocket.addEventListener("message", (evt) => {   // Nicholas Worrell
   let obj = evt.data;
   settingsStorage.setItem("Waypoint1", obj.Waypoint1);
   settingsStorage.setItem("Waypoint2", obj.Waypoint2);
