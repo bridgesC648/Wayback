@@ -153,15 +153,15 @@ messaging.peerSocket.onmessage = evt => {
   }
   // array of setttings keys
   let names = ["newName1", "newName2", "newName3", "newName4", "newName5",
-               "newName6", "newName7", "newName8", "newName9", "newName10"];  
+               "newName6", "newName7", "newName8", "newName9", "newName10"];  // Nicholas Worrell
   for (let i = 0; i < names.length; i++) {
     if (typeof state.waypoints[i] != "undefined") {
-       rename(names[i], state.waypoints[i].getFilename(), evt);
+       rename(names[i], state.waypoints[i].getFilename(), evt);               // Nicholas Worrell
     }
   }
 };
 
-function rename(setKey, txt, evt) {
+function rename(setKey, txt, evt) {                                          // Nicholas Worrell
   if (evt.data.key === setKey && evt.data.newValue && fs.existsSync(txt)) {
     let newName = util.editString(JSON.stringify(evt.data.newValue));
     let jsonData = fs.readFileSync(txt, "cbor");
@@ -258,7 +258,7 @@ myList.delegate = {
 };
 myList.length = NUM_ELEMS;
 
-// Nicholas W. (Settings stuff)
+// Nicholas Worrell (Settings stuff)
 messaging.peerSocket.addEventListener("open", (evt) => {
   console.log("Ready to send or receive messages");
   util.sendMessage(state);
