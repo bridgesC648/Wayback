@@ -2,7 +2,7 @@ import { vibration } from "haptics";    // Kevin Le
 import * as fs from "fs";
 import * as messaging from "messaging";
 
-export function editString(string) { 
+export function editString(string) {   // Nicholas Worrell
     var start = string.indexOf(':')
     var res = string.substring(start + 3, string.length - 4);
     var length = 20;                                           // max number of characters
@@ -48,7 +48,7 @@ export function refreshList(tileList, state, nav){
     }
 }
 
-export function sendMessage(state) {
+export function sendMessage(state) {          // Nicholas Worrell
     let blank = "waypoint not saved yet";
     let data = {
       Waypoint1 : blank,
