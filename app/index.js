@@ -1,26 +1,3 @@
-/*
-Sprint #5 - Navigation Feature with Tile List and Deletable Waypoints
-Christopher Bridges and Keaton Archibald
-
-Sprint #6 - Navigation Feature + Tile List w/ deletable Waypoints + persistence
-  PATCH NOTES
-  11/16:  Changed Locations class to State class. Renamed all instances
-          appropriately. CB
-          Deleted unnecessary code comments CB
-          Added some questionably necessary code comments. CB 
-  11/17:  State of application now saved to device memory upon any change CB
-            - Waypoint saved CB
-            - Waypoint deleted CB
-            - Current waypoint changed CB
-          Upon load, state of application is restored if state information available
-  11/22:  Integrating Settings feature from Fitbit Studio -> GitHub
-          Updated app to include current Settings functionality
-          Renamed MainView -> View, renamed mainView -> view
-          Refactoring
-            - Moved hide/show SVG elements to View class
-  ~11/30: Lots of refactoring
-          Fireworks tweaks
-*/
 import document from "document";        // Christopher Bridges
 import * as messaging from "messaging"; // Nicholas Worrell
 import geolocation from "geolocation";  // Christopher Bridges
@@ -33,17 +10,17 @@ import * as util from "../common/utils";// Christopher Bridges
 //-------------------------------------------------------------------
 // GLOBAL VARIABLES 
 //-------------------------------------------------------------------
-var state = new State();    // State object, holds Waypoints and manipulates them 
-let nav = new Navigator();  // Navigator object, handles navigational features
-let view = new View();      // Contains all of the UI elements. 
-var tileList = [11];        // Contains the tiles of the tile list
-var deletionIndex = 0;
-var hapticSetting;          // This should be in state, but whatever.
+var state = new State();    // CMB
+let nav = new Navigator();  // CMB
+let view = new View();      // CMB 
+var tileList = [11];        // KA
+var deletionIndex = 0;      // KA
+var hapticSetting;          // KL
 
 //-------------------------------------------------------------------
 // BUTTON EVENTS
 //-------------------------------------------------------------------
-// Gets called when the Save button gets pressed
+// Gets called when the Save button gets pressed - CMB
 view.btnSave.onactivate = function(evt) {
   try {
     view.beacon.acquire();
@@ -56,33 +33,37 @@ view.btnSave.onactivate = function(evt) {
     {enableHighAccuracy: true, timeout: 60 * 1000});
 }
 
-// Gets called when the Return button gets pressed.
+// Gets called when the Return button gets pressed. - CMB / KA
 view.btnReturn.onactivate = function(evt) {
   view.showTiles();
   util.refreshList(tileList, state, nav);
 }
 
-view.btnConfirmDeletion.onactivate = function(evt) {
+view.btnConfirmDeletion.onactivate = function(evt) { // KA
   state.delete(deletionIndex);
   view.showTiles();
   util.refreshList(tileList, state, nav);
   util.sendMessage(state);
 }
 
-view.btnCancelDeletion.onactivate = function(evt){
+view.btnCancelDeletion.onactivate = function(evt){  // KA
   view.showTiles();
   util.refreshList(tileList, state, nav);
 }
 
-view.btnConfirmCancelNavigation.onactivate = function(evt) {
+view.btnConfirmCancelNavigation.onactivate = function(evt) { // KA
   view.showNav();
+  if (view.beacon.acquiring) {            // Stop the beacon if it is active
+    console.log("Navigation started.");
+    view.beacon.disable();
+  }
   nav.stop();
   view.phi.rotate(0);
   view.lblName.style.opacity = 0;
   view.lblDistance.style.opacity = 0;
 }
 
-view.btnCancelCancelNavigation.onactivate = function(evt){
+view.btnCancelCancelNavigation.onactivate = function(evt){ // KA
   view.showTiles();
   util.refreshList(tileList, state, nav);
 }
@@ -90,35 +71,33 @@ view.btnCancelCancelNavigation.onactivate = function(evt){
 //-------------------------------------------------------------------
 // CALLBACK FUNCTIONS
 //-------------------------------------------------------------------
-function savePosition(position) {
+function savePosition(position) { // CMB
   view.beacon.disable();
   if (!state.maxReached()) {  // If < max waypoints added
     state.add(position);
-    view.waypointSaved();
+    view.waypointSaved(); 
   } else {
-    // at some point we should replace this with some on-screen indication
-    // that max waypoints have been reached.
     view.saveWaypointFailed();
     console.log("Could not add waypoint: Maximum waypoints reached.");
   }
-  util.sendMessage(state);
+  util.sendMessage(state); // NW
 }
 
 // Christopher Bridges
 function watchSuccess(position) {
   // Gets called when position changes.
-  if (view.beacon.acquiring) {            // Stop the beacon if it is active
-    console.log("Navigation started.");
-    view.beacon.disable();
-  }
   console.log("Updating navigator.");
   nav.update(position);
   if (nav.arrived()) {
+    if (view.beacon.acquiring) {            // Stop the beacon if it is active
+      console.log("Navigation started.");
+      view.beacon.disable();
+    }
     console.log("You have arrived!");     // Announce arrival to log
     nav.stop();                           // Stop navigator
     view.lblDistance.style.display="none";// Hide distance label
     view.lblName.style.display="none";    // Hide the name label.
-    util.vibrate("alert", hapticSetting);      // Alert ring
+    util.vibrate("alert", hapticSetting); // Alert ring - KL
     // Change to fireworks.
     document.location.assign("fireworks.view").then(view.backToNav);
     view.phi.rotate(360);
@@ -135,6 +114,7 @@ function watchSuccess(position) {
   view.lblDistance.style.opacity = 1;
 }
 
+// Christopher Bridges
 function locationError(error) {
   console.log("Error: " + error.code, "Message: " + error.message);
   // Disable beacon, since we aren't trying to acquire anymore.
@@ -151,7 +131,7 @@ messaging.peerSocket.onmessage = evt => {
     hapticSetting = (evt.data.newValue === "true" ? true : false);
     console.log(`Haptic feedback enabled = ${hapticSetting}`);
   }
-  // array of setttings keys
+  // array of setttings keys - NW
   let names = ["newName1", "newName2", "newName3", "newName4", "newName5",
                "newName6", "newName7", "newName8", "newName9", "newName10"];  
   for (let i = 0; i < names.length; i++) {
@@ -161,6 +141,7 @@ messaging.peerSocket.onmessage = evt => {
   }
 };
 
+// NW
 function rename(setKey, txt, evt) {
   if (evt.data.key === setKey && evt.data.newValue && fs.existsSync(txt)) {
     let newName = util.editString(JSON.stringify(evt.data.newValue));

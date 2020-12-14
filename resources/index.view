@@ -1,6 +1,8 @@
+<!-- index.view -->
+
 <svg>
   <svg id="NavigationScreen">
-    <!-- Message label -->
+    <!-- Message label CMB -->
     <symbol id="message">
       <g id="showMessage">
         <text id="txtMessage" x="50%" y="70%-20"
@@ -40,17 +42,17 @@
     gradient-opacity1=".3"
     gradient-opacity2="1"/>
   
-  <!-- signal-acquiring ring. -->
+  <!-- signal-acquiring ring. CMB -->
   <use id="signalRing" href="#signal" width="100%" height="100%" />
 
-  <!-- Use element for our phi indicator -->
+  <!-- Use element for our phi indicator CMB -->
   <use id="phiInstance" href="#phiGroup" width="100%" height="100%" />
 
-  <!-- Buttons -->
+  <!-- Buttons CMB -->
   <use id="btnSave" href="#icon-button" class="medium-button application-fill plus-button1" />
   <use id="btnReturn" href="#icon-button" class="medium-button application-fill plus-button2" />
     
-  <!-- Text Labels -->
+  <!-- Text Labels CMB -->
   <text id="lblName" x="50%" y="70%"
     text-anchor="middle" fill="fb-cyan"
     text-length="224" font-size="30"

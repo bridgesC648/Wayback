@@ -1,3 +1,6 @@
+// PointerSymbol.js
+// Christopher Bridges
+
 export default class PointerSymbol {
   constructor(u, a) {
     this.use = u; // <use> id
