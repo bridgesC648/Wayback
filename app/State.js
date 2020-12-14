@@ -1,3 +1,7 @@
+// State.js
+// Christopher Bridges, unless otherwise noted
+// Keaton Archibald
+
 import Waypoint from "./Waypoint";
 import * as fs from "fs"; // Time to save each waypoint as a file.
 

@@ -1,4 +1,8 @@
 
+// index.jsx - Settings 
+// Nicholas Worrell
+// Christopher Bridges
+
 function mySettings(props) {
   return (
     <Page>
@@ -9,12 +13,13 @@ function mySettings(props) {
           label="Haptic Feedback"
           settingsKey="haptics"
         />
-      </Section>
-      
+      </Section> 
+
+     
       {/* 
         Tect Inputs and Renaming - Nicholas Worrell
       */}
-      
+
       <Section
         title={<Text bold align="center">Modify Waypoints</Text>}>
         <TextInput

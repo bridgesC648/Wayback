@@ -1,6 +1,9 @@
+// utils.js
+// Christopher Bridges, Kevin Le, Nicholas Worrell
+
 import { vibration } from "haptics";    // Kevin Le
-import * as fs from "fs";
-import * as messaging from "messaging";
+import * as fs from "fs"; // CMB
+import * as messaging from "messaging"; // NW
 
 export function editString(string) {   // Nicholas Worrell
     var start = string.indexOf(':')
@@ -10,10 +13,12 @@ export function editString(string) {   // Nicholas Worrell
     return trim;
   }
 
+// CMB
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve,ms));
 }
 
+// KA
 export function refreshList(tileList, state, nav){
     // Code to refresh the tile list so it matches the waypoints : Keaton Archibald
     for (var i = 1; i <= 11; i++){

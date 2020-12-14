@@ -1,3 +1,5 @@
+// View.js
+
 import PointerSymbol from "./PointerSymbol";
 import document from "document";
 import { sleep } from "../common/utils";

@@ -1,3 +1,6 @@
+// Companion index.js
+// Pretty much all Nicholas Worrell
+
 import * as messaging from "messaging";
 import { settingsStorage } from "settings";
 
