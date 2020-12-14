@@ -1,7 +1,11 @@
-import { vibration } from "haptics";    // Kevin Le
-import * as fs from "fs";
-import * as messaging from "messaging";
+// utils.js
+// Christopher Bridges, Kevin Le, Nicholas Worrell
 
+import { vibration } from "haptics";    // Kevin Le
+import * as fs from "fs"; // CMB
+import * as messaging from "messaging"; // NW
+
+// NW
 export function editString(string) { 
     var start = string.indexOf(':')
     var res = string.substring(start + 3, string.length - 4);
@@ -10,10 +14,12 @@ export function editString(string) {
     return trim;
   }
 
+// CMB
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve,ms));
 }
 
+// KA
 export function refreshList(tileList, state, nav){
     // Code to refresh the tile list so it matches the waypoints : Keaton Archibald
     for (var i = 1; i <= 11; i++){
@@ -48,6 +54,7 @@ export function refreshList(tileList, state, nav){
     }
 }
 
+// NW
 export function sendMessage(state) {
     let blank = "waypoint not saved yet";
     let data = {

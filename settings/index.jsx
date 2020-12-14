@@ -1,4 +1,8 @@
 
+// index.jsx - Settings 
+// Nicholas Worrell
+// Christopher Bridges
+
 function mySettings(props) {
   return (
     <Page>
@@ -9,7 +13,7 @@ function mySettings(props) {
           label="Haptic Feedback"
           settingsKey="haptics"
         />
-      </Section>
+      </Section> 
 
       <Section
         title={<Text bold align="center">Modify Waypoints</Text>}>
