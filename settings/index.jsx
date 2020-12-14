@@ -15,6 +15,11 @@ function mySettings(props) {
         />
       </Section> 
 
+     
+      {/* 
+        Tect Inputs and Renaming - Nicholas Worrell
+      */}
+
       <Section
         title={<Text bold align="center">Modify Waypoints</Text>}>
         <TextInput
