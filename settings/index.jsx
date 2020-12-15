@@ -17,7 +17,7 @@ function mySettings(props) {
 
      
       {/* 
-        Tect Inputs and Renaming - Nicholas Worrell
+        Text Inputs and Renaming - Nicholas Worrell
       */}
 
       <Section
